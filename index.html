@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Juego de Números</title>
+  <style>
+    :root {
+      --bg: #f7f8ff;
+      --panel: #ffffff;
+      --primary: #5b7cff;
+      --primary-dark: #4665e6;
+      --accent: #ffd86a;
+      --text: #1f2552;
+      --muted: #68708f;
+      --success: #19b36b;
+      --success-soft: #e9fff3;
+      --error: #e04f5f;
+      --error-soft: #fff0f3;
+      --shadow: 0 16px 40px rgba(68, 84, 167, 0.15);
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, #dfe7ff 0%, transparent 30%),
+        radial-gradient(circle at bottom right, #fff1c8 0%, transparent 25%),
+        var(--bg);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      transition: background 0.25s ease, transform 0.18s ease;
+    }
+
+    body.success-flash {
+      background:
+        radial-gradient(circle at top left, #d5ffe7 0%, transparent 30%),
+        radial-gradient(circle at bottom right, #fff2c8 0%, transparent 25%),
+        var(--bg);
+    }
+
+    body.error-flash {
+      background:
+        radial-gradient(circle at top left, #ffe0e6 0%, transparent 30%),
+        radial-gradient(circle at bottom right, #fff1c8 0%, transparent 25%),
+        var(--bg);
+    }
+
+    .app {
+      width: min(100%, 900px);
+      background: var(--panel);
+      border-radius: 32px;
+      box-shadow: var(--shadow);
+      padding: 24px;
+      display: grid;
+      gap: 24px;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .app.success-pulse {
+      box-shadow: 0 20px 48px rgba(25, 179, 107, 0.22);
+      transform: translateY(-2px) scale(1.005);
+    }
+
+    .app.error-pulse {
+      box-shadow: 0 20px 48px rgba(224, 79, 95, 0.18);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .title-wrap h1 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1;
+    }
+
+    .title-wrap p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(110px, 1fr));
+      gap: 12px;
+      width: min(100%, 360px);
+    }
+
+    .stat {
+      background: #f3f6ff;
+      border-radius: 20px;
+      padding: 14px;
+      text-align: center;
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    .stat.good {
+      background: #ebfff3;
+      transform: scale(1.03);
+    }
+
+    .stat.bad {
+      background: #fff1f3;
+      transform: scale(1.03);
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 1.6rem;
+      font-weight: bold;
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .card {
+      background: linear-gradient(180deg, #ffffff 0%, #f9faff 100%);
+      border: 1px solid #eef1ff;
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .card h2 {
+      margin: 0 0 12px;
+      font-size: 1.35rem;
+    }
+
+    .hint {
+      color: var(--muted);
+      margin: 0 0 16px;
+      line-height: 1.45;
+    }
+
+    .audio-panel {
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+
+    .progress {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .dot {
+      aspect-ratio: 1 / 1;
+      border-radius: 22px;
+      background: #f3f6ff;
+      border: 3px solid transparent;
+      display: grid;
+      place-items: center;
+      font-size: clamp(1.3rem, 4vw, 2rem);
+      font-weight: bold;
+      transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+      color: var(--primary);
+    }
+
+    .dot.current {
+      border-color: var(--accent);
+      background: #fff7d9;
+      transform: scale(1.02);
+    }
+
+    .dot.done {
+      border-color: #bdf0d5;
+      background: var(--success-soft);
+      color: var(--success);
+    }
+
+    .dot.reveal {
+      animation: popReveal 0.35s ease;
+    }
+
+    .dot.wrong-flash {
+      animation: wrongFlash 0.28s ease;
+    }
+
+    .status {
+      min-height: 28px;
+      font-size: 1.05rem;
+      font-weight: bold;
+      padding: 8px 12px;
+      border-radius: 14px;
+      transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+    }
+
+    .status.success {
+      color: var(--success);
+      background: var(--success-soft);
+    }
+
+    .status.error {
+      color: var(--error);
+      background: var(--error-soft);
+    }
+
+    .status.info {
+      color: var(--primary);
+      background: #eef3ff;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    button.secondary,
+    button.primary-soft {
+      border: none;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 16px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+    }
+
+    button.secondary {
+      background: var(--primary);
+      box-shadow: 0 10px 20px rgba(80, 105, 209, 0.2);
+    }
+
+    button.secondary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    button.primary-soft {
+      background: #edf2ff;
+      color: var(--text);
+      box-shadow: 0 8px 16px rgba(80, 105, 209, 0.12);
+    }
+
+    button.primary-soft:hover {
+      background: #e2eaff;
+      transform: translateY(-1px);
+    }
+
+    .keyboard {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .key,
+    .blank {
+      aspect-ratio: 1 / 1;
+      border-radius: 22px;
+    }
+
+    .key {
+      border: none;
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      font-weight: bold;
+      color: var(--text);
+      background: #eef3ff;
+      box-shadow: 0 8px 18px rgba(80, 105, 209, 0.16);
+      cursor: pointer;
+      transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease, color 0.12s ease;
+      user-select: none;
+    }
+
+    .key:hover {
+      transform: translateY(-2px);
+      background: #e4ebff;
+      box-shadow: 0 10px 20px rgba(80, 105, 209, 0.22);
+    }
+
+    .key:active {
+      transform: translateY(1px) scale(0.98);
+    }
+
+    .key.correct {
+      background: linear-gradient(180deg, #e4fff0 0%, #d1ffe6 100%);
+      color: var(--success);
+      box-shadow: 0 12px 26px rgba(25, 179, 107, 0.22);
+      animation: correctBounce 0.34s ease;
+    }
+
+    .key.wrong {
+      background: linear-gradient(180deg, #fff1f3 0%, #ffdfe5 100%);
+      color: var(--error);
+      box-shadow: 0 12px 26px rgba(224, 79, 95, 0.22);
+      animation: shake 0.25s linear;
+    }
+
+    .blank {
+      background: transparent;
+    }
+
+    .footer-note {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      50% { transform: translateX(6px); }
+      75% { transform: translateX(-4px); }
+      100% { transform: translateX(0); }
+    }
+
+    @keyframes popReveal {
+      0% { transform: scale(0.82); }
+      55% { transform: scale(1.14); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes correctBounce {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.09); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes wrongFlash {
+      0% { background: #f3f6ff; }
+      50% { background: #ffe6ea; border-color: #ffc1cb; color: var(--error); }
+      100% { background: #f3f6ff; }
+    }
+
+    @media (max-width: 760px) {
+      .main {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <div class="header">
+      <div class="title-wrap">
+        <h1>Juego de Números</h1>
+        <p>Escuchá los números y tocá el teclado en el mismo orden.</p>
+      </div>
+
+      <div class="stats">
+        <div class="stat" id="roundStat">
+          <div class="stat-label">Ronda</div>
+          <div class="stat-value" id="roundValue">1</div>
+        </div>
+        <div class="stat" id="hitsStat">
+          <div class="stat-label">Aciertos</div>
+          <div class="stat-value" id="hitsValue">0</div>
+        </div>
+        <div class="stat" id="errorsStat">
+          <div class="stat-label">Errores</div>
+          <div class="stat-value" id="errorsValue">0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+      <section class="card" id="audioCard">
+        <h2>Modo audio</h2>
+        <p class="hint">
+          No se muestran los números por adelantado. Solo se revelan en la parte superior cuando el jugador los acierta.
+        </p>
+
+        <div class="audio-panel">
+          <div class="progress" id="progress"></div>
+          <div class="status info" id="status">Tocá “Escuchar números” para comenzar.</div>
+
+          <div class="actions">
+            <button class="secondary" id="listenBtn">🔊 Escuchar números</button>
+            <button class="primary-soft" id="newGameBtn">Nueva partida</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Teclado numérico</h2>
+        <p class="hint">
+          La primera ronda empieza ordenada. Después de completar los 4 números, el teclado se mezcla automáticamente.
+        </p>
+        <div class="keyboard" id="keyboard"></div>
+      </section>
+    </div>
+
+    <div class="footer-note">
+      El <strong>0</strong> sigue incluido para que puedan aparecer secuencias como <strong>0451</strong>.<br>
+      Esta versión suma: revelado de aciertos, sonidos de acierto y fallo, y animaciones visuales para reforzar el aprendizaje.
+    </div>
+  </div>
+
+  <script>
+    const state = {
+      round: 1,
+      hits: 0,
+      errors: 0,
+      sequence: [],
+      currentIndex: 0,
+      orderedKeyboard: [7, 8, 9, 4, 5, 6, 1, 2, 3, null, 0, null],
+      keyboardLayout: [],
+      audioEnabled: 'speechSynthesis' in window,
+      userHasInteracted: false,
+      roundLocked: false,
+      audioContext: null,
+      lastFeedbackTimeouts: []
+    };
+
+    const appEl = document.getElementById('app');
+    const audioCardEl = document.getElementById('audioCard');
+    const progressEl = document.getElementById('progress');
+    const keyboardEl = document.getElementById('keyboard');
+    const statusEl = document.getElementById('status');
+    const roundValueEl = document.getElementById('roundValue');
+    const hitsValueEl = document.getElementById('hitsValue');
+    const errorsValueEl = document.getElementById('errorsValue');
+    const roundStatEl = document.getElementById('roundStat');
+    const hitsStatEl = document.getElementById('hitsStat');
+    const errorsStatEl = document.getElementById('errorsStat');
+    const newGameBtn = document.getElementById('newGameBtn');
+    const listenBtn = document.getElementById('listenBtn');
+
+    function randomDigit() {
+      return Math.floor(Math.random() * 10);
+    }
+
+    function generateSequence() {
+      return Array.from({ length: 4 }, () => randomDigit());
+    }
+
+    function shuffleDigits() {
+      const digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+      for (let i = digits.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [digits[i], digits[j]] = [digits[j], digits[i]];
+      }
+
+      // Dejamos 9 números en las primeras 3 filas y 1 número centrado abajo.
+      // Así el teclado siempre mantiene una forma prolija, incluso mezclado.
+      return [...digits.slice(0, 9), null, digits[9], null];
+    }
+
+    function updateStats() {
+      roundValueEl.textContent = state.round;
+      hitsValueEl.textContent = state.hits;
+      errorsValueEl.textContent = state.errors;
+    }
+
+    function renderProgress(revealIndex = null, wrongFlashIndex = null) {
+      progressEl.innerHTML = '';
+      state.sequence.forEach((digit, index) => {
+        const box = document.createElement('div');
+        box.className = 'dot';
+
+        if (index < state.currentIndex) {
+          box.textContent = digit;
+          box.classList.add('done');
+        } else {
+          box.textContent = '?';
+        }
+
+        if (index === state.currentIndex) {
+          box.classList.add('current');
+        }
+
+        if (index === revealIndex) {
+          box.classList.add('reveal');
+        }
+
+        if (index === wrongFlashIndex) {
+          box.classList.add('wrong-flash');
+        }
+
+        progressEl.appendChild(box);
+      });
+    }
+
+    function renderKeyboard() {
+      keyboardEl.innerHTML = '';
+      state.keyboardLayout.forEach((item) => {
+        if (item === null) {
+          const blank = document.createElement('div');
+          blank.className = 'blank';
+          keyboardEl.appendChild(blank);
+          return;
+        }
+
+        const btn = document.createElement('button');
+        btn.className = 'key';
+        btn.textContent = item;
+        btn.addEventListener('click', () => handleKeyPress(item, btn));
+        keyboardEl.appendChild(btn);
+      });
+    }
+
+    function setStatus(message, type = 'info') {
+      statusEl.className = `status ${type}`;
+      statusEl.textContent = message;
+    }
+
+    function clearFeedbackTimers() {
+      state.lastFeedbackTimeouts.forEach((id) => clearTimeout(id));
+      state.lastFeedbackTimeouts = [];
+    }
+
+    function flashUI(type) {
+      clearFeedbackTimers();
+
+      appEl.classList.remove('success-pulse', 'error-pulse');
+      document.body.classList.remove('success-flash', 'error-flash');
+      audioCardEl.style.borderColor = '#eef1ff';
+
+      if (type === 'success') {
+        appEl.classList.add('success-pulse');
+        document.body.classList.add('success-flash');
+        audioCardEl.style.borderColor = '#c8f1db';
+        hitsStatEl.classList.add('good');
+        const t1 = setTimeout(() => appEl.classList.remove('success-pulse'), 320);
+        const t2 = setTimeout(() => document.body.classList.remove('success-flash'), 320);
+        const t3 = setTimeout(() => hitsStatEl.classList.remove('good'), 420);
+        state.lastFeedbackTimeouts.push(t1, t2, t3);
+        return;
+      }
+
+      if (type === 'error') {
+        appEl.classList.add('error-pulse');
+        document.body.classList.add('error-flash');
+        audioCardEl.style.borderColor = '#ffc8d0';
+        errorsStatEl.classList.add('bad');
+        const t1 = setTimeout(() => appEl.classList.remove('error-pulse'), 320);
+        const t2 = setTimeout(() => document.body.classList.remove('error-flash'), 320);
+        const t3 = setTimeout(() => errorsStatEl.classList.remove('bad'), 420);
+        state.lastFeedbackTimeouts.push(t1, t2, t3);
+      }
+    }
+
+    function ensureVoicesLoaded() {
+      if (!state.audioEnabled) return [];
+      return speechSynthesis.getVoices();
+    }
+
+    function getPreferredVoice() {
+      const voices = ensureVoicesLoaded();
+      return (
+        voices.find((v) => v.lang && v.lang.toLowerCase().startsWith('es-ar')) ||
+        voices.find((v) => v.lang && v.lang.toLowerCase().startsWith('es')) ||
+        null
+      );
+    }
+
+    function getAudioContext() {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return null;
+      if (!state.audioContext) state.audioContext = new AudioCtx();
+      if (state.audioContext.state === 'suspended') {
+        state.audioContext.resume().catch(() => {});
+      }
+      return state.audioContext;
+    }
+
+    function playTone({ frequency = 440, duration = 0.14, type = 'sine', volume = 0.04, startDelay = 0 }) {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+
+      const now = ctx.currentTime + startDelay;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(frequency, now);
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(volume, now + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + duration + 0.02);
+    }
+
+    function playSuccessSound() {
+      playTone({ frequency: 523.25, duration: 0.08, type: 'sine', volume: 0.035 });
+      playTone({ frequency: 659.25, duration: 0.11, type: 'sine', volume: 0.03, startDelay: 0.05 });
+    }
+
+    function playErrorSound() {
+      playTone({ frequency: 240, duration: 0.14, type: 'sawtooth', volume: 0.03 });
+      playTone({ frequency: 180, duration: 0.16, type: 'triangle', volume: 0.025, startDelay: 0.05 });
+    }
+
+    function playRoundCompleteSound() {
+      playTone({ frequency: 523.25, duration: 0.09, type: 'sine', volume: 0.03 });
+      playTone({ frequency: 659.25, duration: 0.09, type: 'sine', volume: 0.03, startDelay: 0.08 });
+      playTone({ frequency: 783.99, duration: 0.12, type: 'sine', volume: 0.03, startDelay: 0.16 });
+    }
+
+    function speakSequence() {
+      state.userHasInteracted = true;
+      getAudioContext();
+
+      if (!state.audioEnabled) {
+        setStatus('Este navegador no pudo activar la voz. Podemos pasarlo a audios grabados.', 'error');
+        return;
+      }
+
+      const voice = getPreferredVoice();
+      const utterance = new SpeechSynthesisUtterance(state.sequence.join(' ... '));
+      utterance.lang = voice?.lang || 'es-AR';
+      utterance.rate = 0.82;
+      utterance.pitch = 1;
+      utterance.volume = 1;
+      if (voice) utterance.voice = voice;
+
+      speechSynthesis.cancel();
+      speechSynthesis.speak(utterance);
+      setStatus('Escuchá la secuencia y después tocá los números en ese orden.', 'info');
+    }
+
+    function nextRound() {
+      state.round += 1;
+      state.sequence = generateSequence();
+      state.currentIndex = 0;
+      state.keyboardLayout = shuffleDigits();
+      state.roundLocked = false;
+      updateStats();
+      renderProgress();
+      renderKeyboard();
+      setStatus('Nueva ronda. Tocá “Escuchar números”.', 'success');
+    }
+
+    function resetKeyClasses(button) {
+      button.classList.remove('correct', 'wrong');
+      void button.offsetWidth;
+    }
+
+    function handleKeyPress(value, button) {
+      if (state.roundLocked) return;
+
+      state.userHasInteracted = true;
+      getAudioContext();
+
+      const expected = state.sequence[state.currentIndex];
+
+      if (value === expected) {
+        resetKeyClasses(button);
+        button.classList.add('correct');
+        state.hits += 1;
+        state.currentIndex += 1;
+        updateStats();
+        renderProgress(state.currentIndex - 1);
+        playSuccessSound();
+        flashUI('success');
+
+        if (state.currentIndex >= state.sequence.length) {
+          state.roundLocked = true;
+          playRoundCompleteSound();
+          setStatus('¡Muy bien! Completaste la ronda.', 'success');
+          setTimeout(nextRound, 1000);
+        } else {
+          setStatus(`¡Correcto! Se reveló el número ${value}.`, 'success');
+        }
+
+        setTimeout(() => button.classList.remove('correct'), 320);
+      } else {
+        resetKeyClasses(button);
+        button.classList.add('wrong');
+        state.errors += 1;
+        updateStats();
+        renderProgress(null, state.currentIndex);
+        playErrorSound();
+        flashUI('error');
+        setStatus('No era ese número. Probá de nuevo o repetí el audio.', 'error');
+        setTimeout(() => button.classList.remove('wrong'), 320);
+      }
+    }
+
+    function startGame() {
+      if (state.audioEnabled) {
+        speechSynthesis.cancel();
+      }
+
+      clearFeedbackTimers();
+      appEl.classList.remove('success-pulse', 'error-pulse');
+      document.body.classList.remove('success-flash', 'error-flash');
+      audioCardEl.style.borderColor = '#eef1ff';
+      hitsStatEl.classList.remove('good');
+      errorsStatEl.classList.remove('bad');
+      roundStatEl.classList.remove('good', 'bad');
+
+      state.round = 1;
+      state.hits = 0;
+      state.errors = 0;
+      state.sequence = generateSequence();
+      state.currentIndex = 0;
+      state.keyboardLayout = [...state.orderedKeyboard];
+      state.roundLocked = false;
+      updateStats();
+      renderProgress();
+      renderKeyboard();
+      setStatus('Primera ronda lista. Tocá “Escuchar números”.', 'info');
+    }
+
+    if ('speechSynthesis' in window) {
+      ensureVoicesLoaded();
+      speechSynthesis.onvoiceschanged = () => ensureVoicesLoaded();
+    }
+
+    listenBtn.addEventListener('click', speakSequence);
+    newGameBtn.addEventListener('click', startGame);
+
+    startGame();
+  </script>
+</body>
+</html>
