@@ -2,81 +2,118 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Juego de Números</title>
   <style>
     :root {
-      --bg: #f7f8ff;
+      --bg: #f8f8ff;
       --panel: #ffffff;
+      --panel-soft: #fbfcff;
       --primary: #5b7cff;
       --primary-dark: #4665e6;
       --accent: #ffd86a;
+      --accent-2: #ff95bf;
       --text: #1f2552;
       --muted: #68708f;
-      --success: #19b36b;
-      --success-soft: #e9fff3;
-      --error: #e04f5f;
-      --error-soft: #fff0f3;
-      --shadow: 0 16px 40px rgba(68, 84, 167, 0.15);
-      --radius: 24px;
+      --success: #16b96e;
+      --success-soft: #eafff1;
+      --error: #f05468;
+      --error-soft: #fff0f4;
+      --warning: #ffb84d;
+      --warning-soft: #fff6e7;
+      --shadow: 0 18px 45px rgba(68, 84, 167, 0.16);
+      --radius: 28px;
     }
 
     * { box-sizing: border-box; }
+
+    html, body {
+      min-height: 100%;
+    }
 
     body {
       margin: 0;
       min-height: 100vh;
       font-family: Arial, Helvetica, sans-serif;
-      background:
-        radial-gradient(circle at top left, #dfe7ff 0%, transparent 30%),
-        radial-gradient(circle at bottom right, #fff1c8 0%, transparent 25%),
-        var(--bg);
       color: var(--text);
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 8% 10%, rgba(157, 190, 255, 0.38) 0 12%, transparent 13%),
+        radial-gradient(circle at 92% 14%, rgba(255, 214, 106, 0.28) 0 10%, transparent 11%),
+        radial-gradient(circle at 84% 88%, rgba(255, 149, 191, 0.22) 0 12%, transparent 13%),
+        radial-gradient(circle at 10% 88%, rgba(132, 237, 198, 0.22) 0 11%, transparent 12%),
+        linear-gradient(180deg, #f7f9ff 0%, #f4f7ff 100%);
       display: grid;
       place-items: center;
-      padding: 20px;
-      transition: background 0.25s ease, transform 0.18s ease;
+      padding: 18px;
+      padding-bottom: calc(18px + env(safe-area-inset-bottom));
+      transition: background 0.28s ease, transform 0.2s ease;
     }
 
     body.success-flash {
       background:
-        radial-gradient(circle at top left, #d5ffe7 0%, transparent 30%),
-        radial-gradient(circle at bottom right, #fff2c8 0%, transparent 25%),
-        var(--bg);
+        radial-gradient(circle at 8% 10%, rgba(128, 236, 177, 0.42) 0 12%, transparent 13%),
+        radial-gradient(circle at 92% 14%, rgba(255, 221, 120, 0.3) 0 10%, transparent 11%),
+        radial-gradient(circle at 84% 88%, rgba(144, 214, 255, 0.22) 0 12%, transparent 13%),
+        radial-gradient(circle at 10% 88%, rgba(132, 237, 198, 0.24) 0 11%, transparent 12%),
+        linear-gradient(180deg, #f7fff9 0%, #effff5 100%);
     }
 
     body.error-flash {
       background:
-        radial-gradient(circle at top left, #ffe0e6 0%, transparent 30%),
-        radial-gradient(circle at bottom right, #fff1c8 0%, transparent 25%),
-        var(--bg);
+        radial-gradient(circle at 8% 10%, rgba(255, 177, 188, 0.38) 0 12%, transparent 13%),
+        radial-gradient(circle at 92% 14%, rgba(255, 214, 106, 0.28) 0 10%, transparent 11%),
+        radial-gradient(circle at 84% 88%, rgba(255, 208, 224, 0.26) 0 12%, transparent 13%),
+        radial-gradient(circle at 10% 88%, rgba(255, 225, 187, 0.24) 0 11%, transparent 12%),
+        linear-gradient(180deg, #fff9fb 0%, #fff2f5 100%);
     }
 
     .app {
-      width: min(100%, 900px);
-      background: var(--panel);
+      width: min(100%, 980px);
+      background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(251,252,255,0.98) 100%);
+      border: 1px solid rgba(232, 238, 255, 0.9);
       border-radius: 32px;
       box-shadow: var(--shadow);
       padding: 24px;
       display: grid;
       gap: 24px;
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .app::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(91,124,255,0.18), rgba(255,216,106,0.14), rgba(255,149,191,0.14));
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+              mask-composite: exclude;
+      pointer-events: none;
+      z-index: -1;
     }
 
     .app.success-pulse {
-      box-shadow: 0 20px 48px rgba(25, 179, 107, 0.22);
-      transform: translateY(-2px) scale(1.005);
+      box-shadow: 0 22px 54px rgba(22, 185, 110, 0.22);
+      transform: translateY(-2px) scale(1.006);
+      border-color: #c7f1db;
     }
 
     .app.error-pulse {
-      box-shadow: 0 20px 48px rgba(224, 79, 95, 0.18);
+      box-shadow: 0 22px 54px rgba(240, 84, 104, 0.18);
+      border-color: #ffd0d8;
     }
 
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 16px;
+      gap: 18px;
       flex-wrap: wrap;
     }
 
@@ -87,34 +124,54 @@
     }
 
     .title-wrap p {
-      margin: 8px 0 0;
+      margin: 10px 0 0;
       color: var(--muted);
       font-size: 1rem;
+      line-height: 1.5;
+      max-width: 540px;
     }
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(3, minmax(110px, 1fr));
+      grid-template-columns: repeat(3, minmax(100px, 1fr));
       gap: 12px;
-      width: min(100%, 360px);
+      width: min(100%, 380px);
     }
 
     .stat {
-      background: #f3f6ff;
-      border-radius: 20px;
-      padding: 14px;
+      background: linear-gradient(180deg, #f5f7ff 0%, #eef3ff 100%);
+      border-radius: 22px;
+      padding: 14px 12px;
       text-align: center;
-      transition: transform 0.15s ease, background 0.15s ease;
+      transition: transform 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);
+    }
+
+    .stat:nth-child(1) {
+      background: linear-gradient(180deg, #eef3ff 0%, #e7edff 100%);
+    }
+
+    .stat:nth-child(2) {
+      background: linear-gradient(180deg, #eefdf5 0%, #e6fff0 100%);
+    }
+
+    .stat:nth-child(3) {
+      background: linear-gradient(180deg, #fff4f6 0%, #fff0f3 100%);
     }
 
     .stat.good {
-      background: #ebfff3;
-      transform: scale(1.03);
+      transform: scale(1.04);
+      box-shadow: 0 10px 20px rgba(22, 185, 110, 0.16);
     }
 
     .stat.bad {
-      background: #fff1f3;
-      transform: scale(1.03);
+      transform: scale(1.04);
+      box-shadow: 0 10px 20px rgba(240, 84, 104, 0.12);
+    }
+
+    .stat.flash-round {
+      transform: scale(1.05);
+      box-shadow: 0 12px 22px rgba(91, 124, 255, 0.14);
     }
 
     .stat-label {
@@ -124,7 +181,7 @@
     }
 
     .stat-value {
-      font-size: 1.6rem;
+      font-size: 1.65rem;
       font-weight: bold;
     }
 
@@ -136,11 +193,12 @@
     }
 
     .card {
-      background: linear-gradient(180deg, #ffffff 0%, #f9faff 100%);
+      background: linear-gradient(180deg, #ffffff 0%, #fafbff 100%);
       border: 1px solid #eef1ff;
       border-radius: var(--radius);
       padding: 20px;
-      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+      min-width: 0;
     }
 
     .card h2 {
@@ -151,7 +209,7 @@
     .hint {
       color: var(--muted);
       margin: 0 0 16px;
-      line-height: 1.45;
+      line-height: 1.5;
     }
 
     .audio-panel {
@@ -160,68 +218,98 @@
       align-content: start;
     }
 
+    .top-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .remaining-chip {
+      background: linear-gradient(180deg, #fff7de 0%, #fff1c9 100%);
+      color: #9b6c00;
+      border: 1px solid #ffe39a;
+      border-radius: 999px;
+      padding: 9px 14px;
+      font-weight: bold;
+      font-size: 0.96rem;
+      box-shadow: 0 8px 18px rgba(255, 196, 69, 0.14);
+    }
+
     .progress {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 12px;
-      margin-top: 6px;
+      margin-top: 4px;
     }
 
     .dot {
       aspect-ratio: 1 / 1;
-      border-radius: 22px;
-      background: #f3f6ff;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #f5f7ff 0%, #edf2ff 100%);
       border: 3px solid transparent;
       display: grid;
       place-items: center;
-      font-size: clamp(1.3rem, 4vw, 2rem);
+      font-size: clamp(1.35rem, 4vw, 2rem);
       font-weight: bold;
-      transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+      transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
       color: var(--primary);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
     }
 
     .dot.current {
       border-color: var(--accent);
-      background: #fff7d9;
+      background: linear-gradient(180deg, #fff9e3 0%, #fff3ca 100%);
       transform: scale(1.02);
+      box-shadow: 0 10px 18px rgba(255, 205, 84, 0.14);
     }
 
     .dot.done {
       border-color: #bdf0d5;
-      background: var(--success-soft);
+      background: linear-gradient(180deg, #edfff5 0%, #defbe9 100%);
       color: var(--success);
+      box-shadow: 0 10px 20px rgba(22, 185, 110, 0.12);
     }
 
     .dot.reveal {
-      animation: popReveal 0.35s ease;
+      animation: popReveal 0.38s ease;
     }
 
     .dot.wrong-flash {
-      animation: wrongFlash 0.28s ease;
+      animation: wrongFlash 0.3s ease;
     }
 
     .status {
       min-height: 28px;
       font-size: 1.05rem;
       font-weight: bold;
-      padding: 8px 12px;
-      border-radius: 14px;
-      transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+      padding: 10px 12px;
+      border-radius: 16px;
+      transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+      line-height: 1.45;
     }
 
     .status.success {
       color: var(--success);
-      background: var(--success-soft);
+      background: linear-gradient(180deg, #effff5 0%, #e7fff0 100%);
+      box-shadow: inset 0 0 0 1px #c8f1db;
     }
 
     .status.error {
       color: var(--error);
-      background: var(--error-soft);
+      background: linear-gradient(180deg, #fff5f7 0%, #fff0f3 100%);
+      box-shadow: inset 0 0 0 1px #ffd4dc;
     }
 
     .status.info {
       color: var(--primary);
-      background: #eef3ff;
+      background: linear-gradient(180deg, #f1f5ff 0%, #eaf0ff 100%);
+      box-shadow: inset 0 0 0 1px #d7e1ff;
+    }
+
+    .status.celebrate {
+      animation: statusPop 0.35s ease;
     }
 
     .actions {
@@ -233,82 +321,123 @@
     button.secondary,
     button.primary-soft {
       border: none;
-      color: white;
-      padding: 12px 18px;
-      border-radius: 16px;
+      padding: 14px 18px;
+      border-radius: 18px;
       font-size: 1rem;
       font-weight: bold;
       cursor: pointer;
       transition: background 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
 
     button.secondary {
-      background: var(--primary);
-      box-shadow: 0 10px 20px rgba(80, 105, 209, 0.2);
+      background: linear-gradient(180deg, #6484ff 0%, #5677ff 100%);
+      color: white;
+      box-shadow: 0 12px 24px rgba(80, 105, 209, 0.22);
+      position: relative;
+      overflow: hidden;
+    }
+
+    button.secondary::after {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: linear-gradient(100deg, transparent 38%, rgba(255,255,255,0.38) 50%, transparent 62%);
+      transform: translateX(-120%);
+      animation: shine 3.6s ease-in-out infinite;
+      pointer-events: none;
     }
 
     button.secondary:hover {
-      background: var(--primary-dark);
+      background: linear-gradient(180deg, #5a7cff 0%, #4665e6 100%);
       transform: translateY(-1px);
     }
 
     button.primary-soft {
-      background: #edf2ff;
+      background: linear-gradient(180deg, #fff1f8 0%, #ffeaf4 100%);
       color: var(--text);
-      box-shadow: 0 8px 16px rgba(80, 105, 209, 0.12);
+      box-shadow: 0 10px 18px rgba(255, 149, 191, 0.16);
     }
 
     button.primary-soft:hover {
-      background: #e2eaff;
+      background: linear-gradient(180deg, #ffe7f2 0%, #ffdfed 100%);
       transform: translateY(-1px);
     }
 
     .keyboard {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
     }
 
     .key,
     .blank {
       aspect-ratio: 1 / 1;
-      border-radius: 22px;
+      border-radius: 24px;
     }
 
     .key {
       border: none;
-      font-size: clamp(1.8rem, 4vw, 2.5rem);
-      font-weight: bold;
+      font-size: clamp(1.9rem, 5vw, 2.6rem);
+      font-weight: 800;
       color: var(--text);
-      background: #eef3ff;
-      box-shadow: 0 8px 18px rgba(80, 105, 209, 0.16);
+      background: linear-gradient(180deg, var(--key-top, #eef3ff) 0%, var(--key-bottom, #e8eeff) 100%);
+      box-shadow:
+        0 10px 22px rgba(80, 105, 209, 0.14),
+        inset 0 1px 0 rgba(255,255,255,0.72);
       cursor: pointer;
-      transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease, color 0.12s ease;
+      transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease, color 0.12s ease, filter 0.12s ease;
       user-select: none;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .key::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.22), transparent 45%);
+      pointer-events: none;
     }
 
     .key:hover {
       transform: translateY(-2px);
-      background: #e4ebff;
-      box-shadow: 0 10px 20px rgba(80, 105, 209, 0.22);
+      box-shadow:
+        0 12px 24px rgba(80, 105, 209, 0.18),
+        inset 0 1px 0 rgba(255,255,255,0.8);
+      filter: saturate(1.02);
     }
 
     .key:active {
-      transform: translateY(1px) scale(0.98);
+      transform: translateY(1px) scale(0.985);
     }
 
+    .key.tone-0 { --key-top: #f4efff; --key-bottom: #ece4ff; }
+    .key.tone-1 { --key-top: #eaf6ff; --key-bottom: #dff0ff; }
+    .key.tone-2 { --key-top: #eefaff; --key-bottom: #dffaff; }
+    .key.tone-3 { --key-top: #eefcf3; --key-bottom: #def8e7; }
+    .key.tone-4 { --key-top: #fff9ea; --key-bottom: #fff1cf; }
+    .key.tone-5 { --key-top: #fff1e7; --key-bottom: #ffe6d3; }
+    .key.tone-6 { --key-top: #fff0f7; --key-bottom: #ffe1ef; }
+    .key.tone-7 { --key-top: #f3efff; --key-bottom: #e8e1ff; }
+    .key.tone-8 { --key-top: #edf1ff; --key-bottom: #e1e8ff; }
+    .key.tone-9 { --key-top: #eefeff; --key-bottom: #dcfbff; }
+
     .key.correct {
-      background: linear-gradient(180deg, #e4fff0 0%, #d1ffe6 100%);
+      background: linear-gradient(180deg, #e9fff2 0%, #d6ffe8 100%);
       color: var(--success);
-      box-shadow: 0 12px 26px rgba(25, 179, 107, 0.22);
+      box-shadow: 0 14px 28px rgba(22, 185, 110, 0.22);
       animation: correctBounce 0.34s ease;
     }
 
     .key.wrong {
-      background: linear-gradient(180deg, #fff1f3 0%, #ffdfe5 100%);
+      background: linear-gradient(180deg, #fff2f5 0%, #ffdfe5 100%);
       color: var(--error);
-      box-shadow: 0 12px 26px rgba(224, 79, 95, 0.22);
-      animation: shake 0.25s linear;
+      box-shadow: 0 14px 28px rgba(240, 84, 104, 0.22);
+      animation: shake 0.26s linear;
     }
 
     .blank {
@@ -316,9 +445,13 @@
     }
 
     .footer-note {
-      font-size: 0.95rem;
+      font-size: 0.96rem;
       color: var(--muted);
-      line-height: 1.55;
+      line-height: 1.6;
+      background: linear-gradient(180deg, #fafbff 0%, #f5f7ff 100%);
+      border-radius: 22px;
+      padding: 14px 16px;
+      border: 1px solid #eef1ff;
     }
 
     @keyframes shake {
@@ -337,23 +470,139 @@
 
     @keyframes correctBounce {
       0% { transform: scale(1); }
-      40% { transform: scale(1.09); }
+      40% { transform: scale(1.1); }
       100% { transform: scale(1); }
     }
 
     @keyframes wrongFlash {
-      0% { background: #f3f6ff; }
-      50% { background: #ffe6ea; border-color: #ffc1cb; color: var(--error); }
-      100% { background: #f3f6ff; }
+      0% { background: linear-gradient(180deg, #f5f7ff 0%, #edf2ff 100%); }
+      50% { background: linear-gradient(180deg, #ffe6ea 0%, #ffd7df 100%); border-color: #ffc1cb; color: var(--error); }
+      100% { background: linear-gradient(180deg, #f5f7ff 0%, #edf2ff 100%); }
     }
 
-    @media (max-width: 760px) {
+    @keyframes statusPop {
+      0% { transform: scale(0.98); }
+      60% { transform: scale(1.015); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes shine {
+      0%, 60%, 100% { transform: translateX(-120%); }
+      75% { transform: translateX(120%); }
+    }
+
+    @media (max-width: 860px) {
       .main {
         grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 12px;
+        padding-bottom: calc(12px + env(safe-area-inset-bottom));
+      }
+
+      .app {
+        padding: 16px;
+        gap: 18px;
+        border-radius: 24px;
+      }
+
+      .header {
+        gap: 14px;
+      }
+
+      .title-wrap p {
+        font-size: 0.96rem;
       }
 
       .stats {
         width: 100%;
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .stat {
+        padding: 12px 10px;
+        border-radius: 18px;
+      }
+
+      .stat-label {
+        font-size: 0.82rem;
+      }
+
+      .stat-value {
+        font-size: 1.42rem;
+      }
+
+      .card {
+        padding: 16px;
+        border-radius: 22px;
+      }
+
+      .progress {
+        gap: 10px;
+      }
+
+      .dot {
+        border-radius: 20px;
+      }
+
+      .actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      button.secondary,
+      button.primary-soft {
+        width: 100%;
+        min-height: 54px;
+      }
+
+      .keyboard {
+        gap: 10px;
+      }
+
+      .key,
+      .blank {
+        border-radius: 20px;
+      }
+
+      .footer-note {
+        font-size: 0.92rem;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .title-wrap h1 {
+        font-size: 1.8rem;
+      }
+
+      .title-wrap p,
+      .hint,
+      .footer-note {
+        font-size: 0.9rem;
+      }
+
+      .card h2 {
+        font-size: 1.2rem;
+      }
+
+      .remaining-chip {
+        font-size: 0.88rem;
+        padding: 8px 12px;
+      }
+
+      .status {
+        font-size: 0.98rem;
+      }
+
+      .key {
+        font-size: 2rem;
+      }
+
+      .dot {
+        font-size: 1.25rem;
       }
     }
   </style>
@@ -363,7 +612,7 @@
     <div class="header">
       <div class="title-wrap">
         <h1>Juego de Números</h1>
-        <p>Escuchá los números y tocá el teclado en el mismo orden.</p>
+        <p>Escuchá los números y tocá el teclado en el mismo orden. Si ya acertaste algunos, el audio repite solo los que faltan.</p>
       </div>
 
       <div class="stats">
@@ -386,10 +635,14 @@
       <section class="card" id="audioCard">
         <h2>Modo audio</h2>
         <p class="hint">
-          No se muestran los números por adelantado. Solo se revelan en la parte superior cuando el jugador los acierta.
+          No se muestran los números por adelantado. Solo se revelan arriba cuando el jugador los acierta.
         </p>
 
         <div class="audio-panel">
+          <div class="top-info">
+            <div class="remaining-chip" id="remainingChip">Quedan 4 números</div>
+          </div>
+
           <div class="progress" id="progress"></div>
           <div class="status info" id="status">Tocá “Escuchar números” para comenzar.</div>
 
@@ -411,7 +664,7 @@
 
     <div class="footer-note">
       El <strong>0</strong> sigue incluido para que puedan aparecer secuencias como <strong>0451</strong>.<br>
-      Esta versión suma: revelado de aciertos, sonidos de acierto y fallo, y animaciones visuales para reforzar el aprendizaje.
+      Esta versión suma: audio con números pendientes, mejor adaptación a celular, más colores en el teclado y sonidos extra para mantener la atención.
     </div>
   </div>
 
@@ -436,6 +689,7 @@
     const progressEl = document.getElementById('progress');
     const keyboardEl = document.getElementById('keyboard');
     const statusEl = document.getElementById('status');
+    const remainingChipEl = document.getElementById('remainingChip');
     const roundValueEl = document.getElementById('roundValue');
     const hitsValueEl = document.getElementById('hitsValue');
     const errorsValueEl = document.getElementById('errorsValue');
@@ -460,15 +714,23 @@
         [digits[i], digits[j]] = [digits[j], digits[i]];
       }
 
-      // Dejamos 9 números en las primeras 3 filas y 1 número centrado abajo.
-      // Así el teclado siempre mantiene una forma prolija, incluso mezclado.
       return [...digits.slice(0, 9), null, digits[9], null];
+    }
+
+    function remainingCount() {
+      return Math.max(0, state.sequence.length - state.currentIndex);
+    }
+
+    function updateRemainingChip() {
+      const count = remainingCount();
+      remainingChipEl.textContent = count === 1 ? 'Queda 1 número' : `Quedan ${count} números`;
     }
 
     function updateStats() {
       roundValueEl.textContent = state.round;
       hitsValueEl.textContent = state.hits;
       errorsValueEl.textContent = state.errors;
+      updateRemainingChip();
     }
 
     function renderProgress(revealIndex = null, wrongFlashIndex = null) {
@@ -511,21 +773,28 @@
         }
 
         const btn = document.createElement('button');
-        btn.className = 'key';
+        btn.className = `key tone-${item}`;
         btn.textContent = item;
+        btn.setAttribute('aria-label', `Número ${item}`);
         btn.addEventListener('click', () => handleKeyPress(item, btn));
         keyboardEl.appendChild(btn);
       });
     }
 
-    function setStatus(message, type = 'info') {
-      statusEl.className = `status ${type}`;
+    function setStatus(message, type = 'info', celebrate = false) {
+      statusEl.className = `status ${type}${celebrate ? ' celebrate' : ''}`;
       statusEl.textContent = message;
     }
 
     function clearFeedbackTimers() {
       state.lastFeedbackTimeouts.forEach((id) => clearTimeout(id));
       state.lastFeedbackTimeouts = [];
+    }
+
+    function vibrate(pattern) {
+      if (navigator.vibrate) {
+        navigator.vibrate(pattern);
+      }
     }
 
     function flashUI(type) {
@@ -540,9 +809,9 @@
         document.body.classList.add('success-flash');
         audioCardEl.style.borderColor = '#c8f1db';
         hitsStatEl.classList.add('good');
-        const t1 = setTimeout(() => appEl.classList.remove('success-pulse'), 320);
-        const t2 = setTimeout(() => document.body.classList.remove('success-flash'), 320);
-        const t3 = setTimeout(() => hitsStatEl.classList.remove('good'), 420);
+        const t1 = setTimeout(() => appEl.classList.remove('success-pulse'), 340);
+        const t2 = setTimeout(() => document.body.classList.remove('success-flash'), 340);
+        const t3 = setTimeout(() => hitsStatEl.classList.remove('good'), 460);
         state.lastFeedbackTimeouts.push(t1, t2, t3);
         return;
       }
@@ -552,11 +821,16 @@
         document.body.classList.add('error-flash');
         audioCardEl.style.borderColor = '#ffc8d0';
         errorsStatEl.classList.add('bad');
-        const t1 = setTimeout(() => appEl.classList.remove('error-pulse'), 320);
-        const t2 = setTimeout(() => document.body.classList.remove('error-flash'), 320);
-        const t3 = setTimeout(() => errorsStatEl.classList.remove('bad'), 420);
+        const t1 = setTimeout(() => appEl.classList.remove('error-pulse'), 340);
+        const t2 = setTimeout(() => document.body.classList.remove('error-flash'), 340);
+        const t3 = setTimeout(() => errorsStatEl.classList.remove('bad'), 460);
         state.lastFeedbackTimeouts.push(t1, t2, t3);
       }
+    }
+
+    function flashRoundStat() {
+      roundStatEl.classList.add('flash-round');
+      setTimeout(() => roundStatEl.classList.remove('flash-round'), 520);
     }
 
     function ensureVoicesLoaded() {
@@ -590,13 +864,17 @@
       const now = ctx.currentTime + startDelay;
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
+
       osc.type = type;
       osc.frequency.setValueAtTime(frequency, now);
+
       gain.gain.setValueAtTime(0.0001, now);
       gain.gain.exponentialRampToValueAtTime(volume, now + 0.01);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
       osc.connect(gain);
       gain.connect(ctx.destination);
+
       osc.start(now);
       osc.stop(now + duration + 0.02);
     }
@@ -604,22 +882,47 @@
     function playSuccessSound() {
       playTone({ frequency: 523.25, duration: 0.08, type: 'sine', volume: 0.035 });
       playTone({ frequency: 659.25, duration: 0.11, type: 'sine', volume: 0.03, startDelay: 0.05 });
+      playTone({ frequency: 783.99, duration: 0.08, type: 'triangle', volume: 0.02, startDelay: 0.12 });
     }
 
     function playErrorSound() {
-      playTone({ frequency: 240, duration: 0.14, type: 'sawtooth', volume: 0.03 });
-      playTone({ frequency: 180, duration: 0.16, type: 'triangle', volume: 0.025, startDelay: 0.05 });
+      playTone({ frequency: 230, duration: 0.14, type: 'sawtooth', volume: 0.03 });
+      playTone({ frequency: 180, duration: 0.15, type: 'triangle', volume: 0.026, startDelay: 0.05 });
+      playTone({ frequency: 145, duration: 0.12, type: 'square', volume: 0.018, startDelay: 0.11 });
     }
 
     function playRoundCompleteSound() {
       playTone({ frequency: 523.25, duration: 0.09, type: 'sine', volume: 0.03 });
-      playTone({ frequency: 659.25, duration: 0.09, type: 'sine', volume: 0.03, startDelay: 0.08 });
-      playTone({ frequency: 783.99, duration: 0.12, type: 'sine', volume: 0.03, startDelay: 0.16 });
+      playTone({ frequency: 659.25, duration: 0.09, type: 'sine', volume: 0.03, startDelay: 0.07 });
+      playTone({ frequency: 783.99, duration: 0.11, type: 'sine', volume: 0.03, startDelay: 0.14 });
+      playTone({ frequency: 1046.5, duration: 0.16, type: 'triangle', volume: 0.026, startDelay: 0.24 });
+    }
+
+    function playListenSound() {
+      playTone({ frequency: 587.33, duration: 0.07, type: 'sine', volume: 0.02 });
+      playTone({ frequency: 783.99, duration: 0.09, type: 'sine', volume: 0.018, startDelay: 0.05 });
+    }
+
+    function playNewRoundSound() {
+      playTone({ frequency: 392, duration: 0.07, type: 'triangle', volume: 0.02 });
+      playTone({ frequency: 523.25, duration: 0.08, type: 'triangle', volume: 0.02, startDelay: 0.07 });
+    }
+
+    function getRemainingSequence() {
+      return state.sequence.slice(state.currentIndex);
     }
 
     function speakSequence() {
       state.userHasInteracted = true;
       getAudioContext();
+      playListenSound();
+
+      const remaining = getRemainingSequence();
+
+      if (!remaining.length) {
+        setStatus('Ya completaste esta ronda. Esperá la siguiente.', 'success');
+        return;
+      }
 
       if (!state.audioEnabled) {
         setStatus('Este navegador no pudo activar la voz. Podemos pasarlo a audios grabados.', 'error');
@@ -627,16 +930,25 @@
       }
 
       const voice = getPreferredVoice();
-      const utterance = new SpeechSynthesisUtterance(state.sequence.join(' ... '));
+      const utterance = new SpeechSynthesisUtterance(remaining.join(' ... '));
+      const isMobile = window.matchMedia('(max-width: 640px)').matches;
       utterance.lang = voice?.lang || 'es-AR';
-      utterance.rate = 0.82;
-      utterance.pitch = 1;
+      utterance.rate = isMobile ? 0.76 : 0.82;
+      utterance.pitch = 1.03;
       utterance.volume = 1;
       if (voice) utterance.voice = voice;
 
       speechSynthesis.cancel();
       speechSynthesis.speak(utterance);
-      setStatus('Escuchá la secuencia y después tocá los números en ese orden.', 'info');
+
+      if (state.currentIndex === 0) {
+        setStatus('Escuchá la secuencia y después tocá los números en ese orden.', 'info');
+      } else {
+        const count = remaining.length;
+        setStatus(count === 1
+          ? 'Se repitió solo el número que faltaba.'
+          : `Se repitieron solo los ${count} números que faltan.`, 'info');
+      }
     }
 
     function nextRound() {
@@ -648,7 +960,9 @@
       updateStats();
       renderProgress();
       renderKeyboard();
-      setStatus('Nueva ronda. Tocá “Escuchar números”.', 'success');
+      playNewRoundSound();
+      flashRoundStat();
+      setStatus('Nueva ronda. Tocá “Escuchar números”.', 'success', true);
     }
 
     function resetKeyClasses(button) {
@@ -673,17 +987,24 @@
         renderProgress(state.currentIndex - 1);
         playSuccessSound();
         flashUI('success');
+        vibrate(18);
 
         if (state.currentIndex >= state.sequence.length) {
           state.roundLocked = true;
           playRoundCompleteSound();
-          setStatus('¡Muy bien! Completaste la ronda.', 'success');
-          setTimeout(nextRound, 1000);
+          setStatus('¡Muy bien! Completaste la ronda.', 'success', true);
+          setTimeout(nextRound, 1050);
         } else {
-          setStatus(`¡Correcto! Se reveló el número ${value}.`, 'success');
+          const remaining = remainingCount();
+          setStatus(
+            remaining === 1
+              ? `¡Correcto! Se reveló el ${value}. Queda 1 número.`
+              : `¡Correcto! Se reveló el ${value}. Quedan ${remaining} números.`,
+            'success'
+          );
         }
 
-        setTimeout(() => button.classList.remove('correct'), 320);
+        setTimeout(() => button.classList.remove('correct'), 340);
       } else {
         resetKeyClasses(button);
         button.classList.add('wrong');
@@ -692,8 +1013,9 @@
         renderProgress(null, state.currentIndex);
         playErrorSound();
         flashUI('error');
+        vibrate([30, 25, 30]);
         setStatus('No era ese número. Probá de nuevo o repetí el audio.', 'error');
-        setTimeout(() => button.classList.remove('wrong'), 320);
+        setTimeout(() => button.classList.remove('wrong'), 340);
       }
     }
 
@@ -708,7 +1030,7 @@
       audioCardEl.style.borderColor = '#eef1ff';
       hitsStatEl.classList.remove('good');
       errorsStatEl.classList.remove('bad');
-      roundStatEl.classList.remove('good', 'bad');
+      roundStatEl.classList.remove('good', 'bad', 'flash-round');
 
       state.round = 1;
       state.hits = 0;
@@ -717,9 +1039,11 @@
       state.currentIndex = 0;
       state.keyboardLayout = [...state.orderedKeyboard];
       state.roundLocked = false;
+
       updateStats();
       renderProgress();
       renderKeyboard();
+      playNewRoundSound();
       setStatus('Primera ronda lista. Tocá “Escuchar números”.', 'info');
     }
 
