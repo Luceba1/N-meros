@@ -3,222 +3,170 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Juego de Números</title>
+  <title>Números para peques</title>
   <style>
     :root {
-      --bg: #f8f8ff;
+      --bg1: #f7f9ff;
+      --bg2: #eef5ff;
       --panel: #ffffff;
-      --panel-soft: #fbfcff;
-      --primary: #5b7cff;
-      --primary-dark: #4665e6;
-      --accent: #ffd86a;
-      --accent-2: #ff95bf;
-      --text: #1f2552;
-      --muted: #68708f;
-      --success: #16b96e;
-      --success-soft: #eafff1;
-      --error: #f05468;
-      --error-soft: #fff0f4;
-      --warning: #ffb84d;
-      --warning-soft: #fff6e7;
-      --shadow: 0 18px 45px rgba(68, 84, 167, 0.16);
+      --line: #e8eeff;
+      --text: #22315f;
+      --muted: #66729e;
+      --blue: #5b7cff;
+      --blue-dark: #4162e8;
+      --yellow: #ffd86a;
+      --pink: #ff9dc6;
+      --green: #19bf78;
+      --red: #f25a74;
+      --shadow: 0 18px 40px rgba(75, 99, 189, 0.16);
       --radius: 28px;
     }
 
     * { box-sizing: border-box; }
-
-    html, body {
-      min-height: 100%;
-    }
+    html, body { min-height: 100%; }
 
     body {
       margin: 0;
       min-height: 100vh;
       font-family: Arial, Helvetica, sans-serif;
       color: var(--text);
-      overflow-x: hidden;
       background:
-        radial-gradient(circle at 8% 10%, rgba(157, 190, 255, 0.38) 0 12%, transparent 13%),
-        radial-gradient(circle at 92% 14%, rgba(255, 214, 106, 0.28) 0 10%, transparent 11%),
-        radial-gradient(circle at 84% 88%, rgba(255, 149, 191, 0.22) 0 12%, transparent 13%),
-        radial-gradient(circle at 10% 88%, rgba(132, 237, 198, 0.22) 0 11%, transparent 12%),
-        linear-gradient(180deg, #f7f9ff 0%, #f4f7ff 100%);
+        radial-gradient(circle at 8% 10%, rgba(157, 190, 255, 0.40) 0 12%, transparent 13%),
+        radial-gradient(circle at 92% 12%, rgba(255, 216, 106, 0.32) 0 11%, transparent 12%),
+        radial-gradient(circle at 88% 90%, rgba(255, 157, 198, 0.22) 0 12%, transparent 13%),
+        radial-gradient(circle at 10% 88%, rgba(126, 232, 184, 0.22) 0 11%, transparent 12%),
+        linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 100%);
+      padding: 18px;
       display: grid;
       place-items: center;
-      padding: 18px;
-      padding-bottom: calc(18px + env(safe-area-inset-bottom));
-      transition: background 0.28s ease, transform 0.2s ease;
-    }
-
-    body.success-flash {
-      background:
-        radial-gradient(circle at 8% 10%, rgba(128, 236, 177, 0.42) 0 12%, transparent 13%),
-        radial-gradient(circle at 92% 14%, rgba(255, 221, 120, 0.3) 0 10%, transparent 11%),
-        radial-gradient(circle at 84% 88%, rgba(144, 214, 255, 0.22) 0 12%, transparent 13%),
-        radial-gradient(circle at 10% 88%, rgba(132, 237, 198, 0.24) 0 11%, transparent 12%),
-        linear-gradient(180deg, #f7fff9 0%, #effff5 100%);
-    }
-
-    body.error-flash {
-      background:
-        radial-gradient(circle at 8% 10%, rgba(255, 177, 188, 0.38) 0 12%, transparent 13%),
-        radial-gradient(circle at 92% 14%, rgba(255, 214, 106, 0.28) 0 10%, transparent 11%),
-        radial-gradient(circle at 84% 88%, rgba(255, 208, 224, 0.26) 0 12%, transparent 13%),
-        radial-gradient(circle at 10% 88%, rgba(255, 225, 187, 0.24) 0 11%, transparent 12%),
-        linear-gradient(180deg, #fff9fb 0%, #fff2f5 100%);
     }
 
     .app {
-      width: min(100%, 980px);
-      background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(251,252,255,0.98) 100%);
-      border: 1px solid rgba(232, 238, 255, 0.9);
-      border-radius: 32px;
+      width: min(100%, 1080px);
+      background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(250,252,255,0.98) 100%);
+      border: 1px solid rgba(231,238,255,0.9);
+      border-radius: 34px;
       box-shadow: var(--shadow);
-      padding: 24px;
+      padding: 22px;
       display: grid;
-      gap: 24px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-      position: relative;
-      isolation: isolate;
+      gap: 18px;
     }
 
-    .app::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      padding: 1px;
-      background: linear-gradient(135deg, rgba(91,124,255,0.18), rgba(255,216,106,0.14), rgba(255,149,191,0.14));
-      -webkit-mask:
-        linear-gradient(#000 0 0) content-box,
-        linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor;
-              mask-composite: exclude;
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    .app.success-pulse {
-      box-shadow: 0 22px 54px rgba(22, 185, 110, 0.22);
-      transform: translateY(-2px) scale(1.006);
-      border-color: #c7f1db;
-    }
-
-    .app.error-pulse {
-      box-shadow: 0 22px 54px rgba(240, 84, 104, 0.18);
-      border-color: #ffd0d8;
-    }
-
-    .header {
+    .topbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 18px;
+      gap: 16px;
       flex-wrap: wrap;
     }
 
-    .title-wrap h1 {
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      width: 66px;
+      height: 66px;
+      border-radius: 22px;
+      display: grid;
+      place-items: center;
+      font-size: 2rem;
+      background: linear-gradient(180deg, #f2f6ff 0%, #e7eeff 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.75);
+    }
+
+    .brand h1 {
       margin: 0;
-      font-size: clamp(2rem, 4vw, 3rem);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
       line-height: 1;
     }
 
-    .title-wrap p {
-      margin: 10px 0 0;
+    .tiny-help {
       color: var(--muted);
-      font-size: 1rem;
-      line-height: 1.5;
-      max-width: 540px;
+      font-size: .95rem;
+      margin-top: 6px;
     }
 
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(100px, 1fr));
-      gap: 12px;
-      width: min(100%, 380px);
+    .chips {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
-    .stat {
-      background: linear-gradient(180deg, #f5f7ff 0%, #eef3ff 100%);
-      border-radius: 22px;
-      padding: 14px 12px;
-      text-align: center;
-      transition: transform 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);
-    }
-
-    .stat:nth-child(1) {
-      background: linear-gradient(180deg, #eef3ff 0%, #e7edff 100%);
-    }
-
-    .stat:nth-child(2) {
-      background: linear-gradient(180deg, #eefdf5 0%, #e6fff0 100%);
-    }
-
-    .stat:nth-child(3) {
-      background: linear-gradient(180deg, #fff4f6 0%, #fff0f3 100%);
-    }
-
-    .stat.good {
-      transform: scale(1.04);
-      box-shadow: 0 10px 20px rgba(22, 185, 110, 0.16);
-    }
-
-    .stat.bad {
-      transform: scale(1.04);
-      box-shadow: 0 10px 20px rgba(240, 84, 104, 0.12);
-    }
-
-    .stat.flash-round {
-      transform: scale(1.05);
-      box-shadow: 0 12px 22px rgba(91, 124, 255, 0.14);
-    }
-
-    .stat-label {
-      font-size: 0.9rem;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
-
-    .stat-value {
-      font-size: 1.65rem;
+    .chip {
+      border-radius: 999px;
+      padding: 10px 14px;
       font-weight: bold;
+      background: linear-gradient(180deg, #f4f7ff 0%, #edf2ff 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    }
+
+    .chip.good { background: linear-gradient(180deg, #effff5 0%, #e7fff0 100%); color: #0d955c; }
+    .chip.soft { background: linear-gradient(180deg, #fff9e7 0%, #fff2ca 100%); color: #8a6500; }
+
+    .modes {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .mode-btn {
+      border: none;
+      background: linear-gradient(180deg, #f7f9ff 0%, #edf2ff 100%);
+      border-radius: 24px;
+      padding: 16px 10px;
+      cursor: pointer;
+      display: grid;
+      gap: 8px;
+      place-items: center;
+      color: var(--text);
+      box-shadow: 0 12px 22px rgba(80, 105, 209, 0.12);
+      transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+    }
+
+    .mode-btn:hover { transform: translateY(-1px); }
+    .mode-btn:active { transform: translateY(1px) scale(.985); }
+
+    .mode-btn.active {
+      background: linear-gradient(180deg, var(--blue) 0%, var(--blue-dark) 100%);
+      color: #fff;
+      box-shadow: 0 14px 28px rgba(65, 98, 232, 0.24);
+    }
+
+    .mode-icon {
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .mode-label {
+      font-size: 1rem;
+      font-weight: 900;
     }
 
     .main {
       display: grid;
       grid-template-columns: 1.05fr 1fr;
-      gap: 24px;
+      gap: 18px;
       align-items: start;
     }
 
-    .card {
-      background: linear-gradient(180deg, #ffffff 0%, #fafbff 100%);
-      border: 1px solid #eef1ff;
+    .panel {
+      background: linear-gradient(180deg, #ffffff 0%, #fafcff 100%);
+      border: 1px solid var(--line);
       border-radius: var(--radius);
-      padding: 20px;
-      transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+      padding: 18px;
       min-width: 0;
     }
 
-    .card h2 {
-      margin: 0 0 12px;
-      font-size: 1.35rem;
-    }
-
-    .hint {
-      color: var(--muted);
-      margin: 0 0 16px;
-      line-height: 1.5;
-    }
-
-    .audio-panel {
+    .hero {
       display: grid;
       gap: 16px;
-      align-content: start;
     }
 
-    .top-info {
+    .hero-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -226,90 +174,166 @@
       flex-wrap: wrap;
     }
 
-    .remaining-chip {
-      background: linear-gradient(180deg, #fff7de 0%, #fff1c9 100%);
-      color: #9b6c00;
-      border: 1px solid #ffe39a;
+    .hero-badge {
+      padding: 10px 14px;
       border-radius: 999px;
-      padding: 9px 14px;
-      font-weight: bold;
-      font-size: 0.96rem;
-      box-shadow: 0 8px 18px rgba(255, 196, 69, 0.14);
+      font-weight: 900;
+      color: #835e00;
+      background: linear-gradient(180deg, #fff8e3 0%, #fff1c7 100%);
+      border: 1px solid #ffe49b;
     }
 
-    .progress {
+    .icon-btn,
+    .action-btn,
+    .num-btn,
+    .pick-card {
+      border: none;
+      cursor: pointer;
+      transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    .icon-btn:hover,
+    .action-btn:hover,
+    .num-btn:hover,
+    .pick-card:hover { transform: translateY(-1px); }
+
+    .icon-btn:active,
+    .action-btn:active,
+    .num-btn:active,
+    .pick-card:active { transform: translateY(1px) scale(.985); }
+
+    .icon-btn {
+      width: 68px;
+      height: 68px;
+      border-radius: 22px;
+      font-size: 1.9rem;
+      background: linear-gradient(180deg, #eef4ff 0%, #e4ecff 100%);
+      box-shadow: 0 12px 20px rgba(80, 105, 209, 0.15);
+    }
+
+    .big-stage {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
       gap: 12px;
-      margin-top: 4px;
+      place-items: center;
+      background: linear-gradient(180deg, #f8faff 0%, #eef3ff 100%);
+      border: 1px solid #e6ecff;
+      border-radius: 28px;
+      padding: 18px;
+      min-height: 250px;
     }
 
-    .dot {
-      aspect-ratio: 1 / 1;
-      border-radius: 24px;
-      background: linear-gradient(180deg, #f5f7ff 0%, #edf2ff 100%);
-      border: 3px solid transparent;
+    .big-digit {
+      font-size: clamp(5.5rem, 15vw, 9rem);
+      line-height: .9;
+      font-weight: 900;
+      color: var(--blue);
+      text-shadow: 0 10px 20px rgba(91,124,255,0.12);
+    }
+
+    .big-word {
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      font-weight: 900;
+      text-transform: lowercase;
+    }
+
+    .scene {
+      width: 100%;
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+      border: 1px solid #edf2ff;
+      border-radius: 26px;
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+      min-height: 230px;
+    }
+
+    .scene-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 1.02rem;
+      font-weight: 900;
+    }
+
+    .scene-drawing {
+      min-height: 128px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      align-items: center;
+      padding: 6px;
+    }
+
+    .sticker {
+      width: 72px;
+      height: 72px;
+      border-radius: 22px;
       display: grid;
       place-items: center;
-      font-size: clamp(1.35rem, 4vw, 2rem);
+      font-size: 2rem;
+      background: linear-gradient(180deg, #fff7e2 0%, #fff1ca 100%);
+      box-shadow: 0 10px 18px rgba(255, 200, 79, 0.14);
+    }
+
+    .empty-box {
+      width: min(100%, 250px);
+      min-height: 104px;
+      border-radius: 24px;
+      border: 3px dashed #d3dcff;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      font-size: 1.15rem;
       font-weight: bold;
-      transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
-      color: var(--primary);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+      background: linear-gradient(180deg, #f8faff 0%, #eef3ff 100%);
+      padding: 16px;
+      text-align: center;
     }
 
-    .dot.current {
-      border-color: var(--accent);
-      background: linear-gradient(180deg, #fff9e3 0%, #fff3ca 100%);
-      transform: scale(1.02);
-      box-shadow: 0 10px 18px rgba(255, 205, 84, 0.14);
+    .mini-row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
-    .dot.done {
-      border-color: #bdf0d5;
-      background: linear-gradient(180deg, #edfff5 0%, #defbe9 100%);
-      color: var(--success);
-      box-shadow: 0 10px 20px rgba(22, 185, 110, 0.12);
-    }
-
-    .dot.reveal {
-      animation: popReveal 0.38s ease;
-    }
-
-    .dot.wrong-flash {
-      animation: wrongFlash 0.3s ease;
+    .mini-pill {
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 900;
+      background: linear-gradient(180deg, #f6f8ff 0%, #edf2ff 100%);
+      color: var(--muted);
     }
 
     .status {
-      min-height: 28px;
-      font-size: 1.05rem;
-      font-weight: bold;
-      padding: 10px 12px;
-      border-radius: 16px;
-      transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
-      line-height: 1.45;
+      min-height: 68px;
+      border-radius: 22px;
+      padding: 14px 16px;
+      display: grid;
+      align-items: center;
+      font-size: 1.12rem;
+      font-weight: 900;
+      line-height: 1.35;
+      background: linear-gradient(180deg, #eef4ff 0%, #e7efff 100%);
+      color: var(--blue);
+      box-shadow: inset 0 0 0 1px #dce6ff;
     }
 
-    .status.success {
-      color: var(--success);
+    .status.ok {
       background: linear-gradient(180deg, #effff5 0%, #e7fff0 100%);
+      color: var(--green);
       box-shadow: inset 0 0 0 1px #c8f1db;
     }
 
-    .status.error {
-      color: var(--error);
+    .status.bad {
       background: linear-gradient(180deg, #fff5f7 0%, #fff0f3 100%);
-      box-shadow: inset 0 0 0 1px #ffd4dc;
-    }
-
-    .status.info {
-      color: var(--primary);
-      background: linear-gradient(180deg, #f1f5ff 0%, #eaf0ff 100%);
-      box-shadow: inset 0 0 0 1px #d7e1ff;
-    }
-
-    .status.celebrate {
-      animation: statusPop 0.35s ease;
+      color: var(--red);
+      box-shadow: inset 0 0 0 1px #ffd5dd;
     }
 
     .actions {
@@ -318,51 +342,51 @@
       flex-wrap: wrap;
     }
 
-    button.secondary,
-    button.primary-soft {
-      border: none;
+    .action-btn {
       padding: 14px 18px;
-      border-radius: 18px;
+      border-radius: 20px;
       font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
-      touch-action: manipulation;
-      -webkit-tap-highlight-color: transparent;
+      font-weight: 900;
+      box-shadow: 0 12px 20px rgba(80, 105, 209, 0.14);
     }
 
-    button.secondary {
-      background: linear-gradient(180deg, #6484ff 0%, #5677ff 100%);
-      color: white;
-      box-shadow: 0 12px 24px rgba(80, 105, 209, 0.22);
-      position: relative;
-      overflow: hidden;
+    .action-btn.primary {
+      background: linear-gradient(180deg, var(--blue) 0%, var(--blue-dark) 100%);
+      color: #fff;
     }
 
-    button.secondary::after {
-      content: "";
-      position: absolute;
-      inset: -40%;
-      background: linear-gradient(100deg, transparent 38%, rgba(255,255,255,0.38) 50%, transparent 62%);
-      transform: translateX(-120%);
-      animation: shine 3.6s ease-in-out infinite;
-      pointer-events: none;
-    }
-
-    button.secondary:hover {
-      background: linear-gradient(180deg, #5a7cff 0%, #4665e6 100%);
-      transform: translateY(-1px);
-    }
-
-    button.primary-soft {
-      background: linear-gradient(180deg, #fff1f8 0%, #ffeaf4 100%);
+    .action-btn.soft {
+      background: linear-gradient(180deg, #fff1f8 0%, #ffe8f2 100%);
       color: var(--text);
-      box-shadow: 0 10px 18px rgba(255, 149, 191, 0.16);
     }
 
-    button.primary-soft:hover {
-      background: linear-gradient(180deg, #ffe7f2 0%, #ffdfed 100%);
-      transform: translateY(-1px);
+    .action-btn.light {
+      background: linear-gradient(180deg, #f6f8ff 0%, #edf2ff 100%);
+      color: var(--text);
+    }
+
+    .target-box {
+      display: grid;
+      gap: 12px;
+      background: linear-gradient(180deg, #f8faff 0%, #eef3ff 100%);
+      border: 1px solid #e6ecff;
+      border-radius: 28px;
+      padding: 18px;
+      place-items: center;
+    }
+
+    .target-top {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .target-label {
+      font-weight: 900;
+      font-size: 1.08rem;
     }
 
     .keyboard {
@@ -371,691 +395,762 @@
       gap: 12px;
     }
 
-    .key,
-    .blank {
+    .num-btn,
+    .ghost {
       aspect-ratio: 1 / 1;
       border-radius: 24px;
     }
 
-    .key {
-      border: none;
-      font-size: clamp(1.9rem, 5vw, 2.6rem);
-      font-weight: 800;
+    .ghost { background: transparent; }
+
+    .num-btn {
+      font-size: clamp(2rem, 6vw, 3rem);
+      font-weight: 900;
       color: var(--text);
-      background: linear-gradient(180deg, var(--key-top, #eef3ff) 0%, var(--key-bottom, #e8eeff) 100%);
-      box-shadow:
-        0 10px 22px rgba(80, 105, 209, 0.14),
-        inset 0 1px 0 rgba(255,255,255,0.72);
-      cursor: pointer;
-      transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease, color 0.12s ease, filter 0.12s ease;
-      user-select: none;
-      touch-action: manipulation;
-      -webkit-tap-highlight-color: transparent;
+      background: linear-gradient(180deg, var(--top, #eef3ff) 0%, var(--bottom, #e6ecff) 100%);
+      box-shadow: 0 12px 22px rgba(80, 105, 209, 0.14), inset 0 1px 0 rgba(255,255,255,0.78);
       position: relative;
       overflow: hidden;
     }
 
-    .key::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(255,255,255,0.22), transparent 45%);
-      pointer-events: none;
+    .num-btn.ok {
+      background: linear-gradient(180deg, #e9fff2 0%, #d8ffea 100%);
+      color: var(--green);
     }
 
-    .key:hover {
-      transform: translateY(-2px);
-      box-shadow:
-        0 12px 24px rgba(80, 105, 209, 0.18),
-        inset 0 1px 0 rgba(255,255,255,0.8);
-      filter: saturate(1.02);
+    .num-btn.bad {
+      background: linear-gradient(180deg, #fff2f5 0%, #ffdfe6 100%);
+      color: var(--red);
     }
 
-    .key:active {
-      transform: translateY(1px) scale(0.985);
+    .num-btn.reveal {
+      outline: 4px solid var(--yellow);
     }
 
-    .key.tone-0 { --key-top: #f4efff; --key-bottom: #ece4ff; }
-    .key.tone-1 { --key-top: #eaf6ff; --key-bottom: #dff0ff; }
-    .key.tone-2 { --key-top: #eefaff; --key-bottom: #dffaff; }
-    .key.tone-3 { --key-top: #eefcf3; --key-bottom: #def8e7; }
-    .key.tone-4 { --key-top: #fff9ea; --key-bottom: #fff1cf; }
-    .key.tone-5 { --key-top: #fff1e7; --key-bottom: #ffe6d3; }
-    .key.tone-6 { --key-top: #fff0f7; --key-bottom: #ffe1ef; }
-    .key.tone-7 { --key-top: #f3efff; --key-bottom: #e8e1ff; }
-    .key.tone-8 { --key-top: #edf1ff; --key-bottom: #e1e8ff; }
-    .key.tone-9 { --key-top: #eefeff; --key-bottom: #dcfbff; }
+    .tone-0 { --top: #f4efff; --bottom: #ece4ff; }
+    .tone-1 { --top: #eaf6ff; --bottom: #dff0ff; }
+    .tone-2 { --top: #eefaff; --bottom: #dffaff; }
+    .tone-3 { --top: #eefcf3; --bottom: #def8e7; }
+    .tone-4 { --top: #fff9ea; --bottom: #fff1cf; }
+    .tone-5 { --top: #fff1e7; --bottom: #ffe6d3; }
+    .tone-6 { --top: #fff0f7; --bottom: #ffe1ef; }
+    .tone-7 { --top: #f3efff; --bottom: #e8e1ff; }
+    .tone-8 { --top: #edf1ff; --bottom: #e1e8ff; }
+    .tone-9 { --top: #eefeff; --bottom: #dcfbff; }
 
-    .key.correct {
-      background: linear-gradient(180deg, #e9fff2 0%, #d6ffe8 100%);
-      color: var(--success);
-      box-shadow: 0 14px 28px rgba(22, 185, 110, 0.22);
-      animation: correctBounce 0.34s ease;
+    .pick-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
     }
 
-    .key.wrong {
-      background: linear-gradient(180deg, #fff2f5 0%, #ffdfe5 100%);
-      color: var(--error);
-      box-shadow: 0 14px 28px rgba(240, 84, 104, 0.22);
-      animation: shake 0.26s linear;
+    .pick-card {
+      aspect-ratio: 1 / 1;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #f8faff 0%, #eef3ff 100%);
+      box-shadow: 0 12px 22px rgba(80, 105, 209, 0.14);
+      display: grid;
+      place-items: center;
+      padding: 12px;
+      gap: 10px;
+      font-size: 1.3rem;
     }
 
-    .blank {
-      background: transparent;
+    .pick-card.ok {
+      background: linear-gradient(180deg, #e9fff2 0%, #d8ffea 100%);
     }
 
-    .footer-note {
-      font-size: 0.96rem;
-      color: var(--muted);
-      line-height: 1.6;
+    .pick-card.bad {
+      background: linear-gradient(180deg, #fff2f5 0%, #ffdfe6 100%);
+    }
+
+    .pick-card.reveal {
+      outline: 4px solid var(--yellow);
+    }
+
+    .pick-drawing {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 1.6rem;
+      line-height: 1;
+    }
+
+    .progress {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .bubble {
+      min-height: 76px;
+      border-radius: 24px;
+      display: grid;
+      place-items: center;
+      font-size: 1.8rem;
+      font-weight: 900;
+      background: linear-gradient(180deg, #f6f8ff 0%, #edf2ff 100%);
+      border: 3px solid transparent;
+      color: var(--blue);
+    }
+
+    .bubble.current {
+      border-color: var(--yellow);
+      background: linear-gradient(180deg, #fff9e3 0%, #fff2c8 100%);
+    }
+
+    .bubble.done {
+      border-color: #bdf0d5;
+      background: linear-gradient(180deg, #edfff5 0%, #defbe9 100%);
+      color: var(--green);
+    }
+
+    .bubble.hide-digit { font-size: 2.1rem; }
+
+    .adult-note {
       background: linear-gradient(180deg, #fafbff 0%, #f5f7ff 100%);
+      border: 1px solid var(--line);
       border-radius: 22px;
       padding: 14px 16px;
-      border: 1px solid #eef1ff;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: .95rem;
     }
 
-    @keyframes shake {
-      0% { transform: translateX(0); }
-      25% { transform: translateX(-6px); }
-      50% { transform: translateX(6px); }
-      75% { transform: translateX(-4px); }
-      100% { transform: translateX(0); }
+    @media (max-width: 900px) {
+      .main { grid-template-columns: 1fr; }
     }
 
-    @keyframes popReveal {
-      0% { transform: scale(0.82); }
-      55% { transform: scale(1.14); }
-      100% { transform: scale(1); }
-    }
-
-    @keyframes correctBounce {
-      0% { transform: scale(1); }
-      40% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
-
-    @keyframes wrongFlash {
-      0% { background: linear-gradient(180deg, #f5f7ff 0%, #edf2ff 100%); }
-      50% { background: linear-gradient(180deg, #ffe6ea 0%, #ffd7df 100%); border-color: #ffc1cb; color: var(--error); }
-      100% { background: linear-gradient(180deg, #f5f7ff 0%, #edf2ff 100%); }
-    }
-
-    @keyframes statusPop {
-      0% { transform: scale(0.98); }
-      60% { transform: scale(1.015); }
-      100% { transform: scale(1); }
-    }
-
-    @keyframes shine {
-      0%, 60%, 100% { transform: translateX(-120%); }
-      75% { transform: translateX(120%); }
-    }
-
-    @media (max-width: 860px) {
-      .main {
-        grid-template-columns: 1fr;
-      }
+    @media (max-width: 700px) {
+      .modes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .pick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (max-width: 640px) {
-      body {
-        padding: 12px;
-        padding-bottom: calc(12px + env(safe-area-inset-bottom));
-      }
-
-      .app {
-        padding: 16px;
-        gap: 18px;
-        border-radius: 24px;
-      }
-
-      .header {
-        gap: 14px;
-      }
-
-      .title-wrap p {
-        font-size: 0.96rem;
-      }
-
-      .stats {
-        width: 100%;
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      .stat {
-        padding: 12px 10px;
-        border-radius: 18px;
-      }
-
-      .stat-label {
-        font-size: 0.82rem;
-      }
-
-      .stat-value {
-        font-size: 1.42rem;
-      }
-
-      .card {
-        padding: 16px;
-        border-radius: 22px;
-      }
-
-      .progress {
-        gap: 10px;
-      }
-
-      .dot {
-        border-radius: 20px;
-      }
-
-      .actions {
-        display: grid;
-        grid-template-columns: 1fr;
-      }
-
-      button.secondary,
-      button.primary-soft {
-        width: 100%;
-        min-height: 54px;
-      }
-
-      .keyboard {
-        gap: 10px;
-      }
-
-      .key,
-      .blank {
-        border-radius: 20px;
-      }
-
-      .footer-note {
-        font-size: 0.92rem;
-      }
+      body { padding: 12px; }
+      .app { padding: 14px; border-radius: 24px; }
+      .panel { padding: 14px; border-radius: 22px; }
+      .actions { display: grid; grid-template-columns: 1fr; }
+      .action-btn { width: 100%; }
+      .sticker { width: 60px; height: 60px; font-size: 1.8rem; border-radius: 18px; }
+      .status { font-size: 1rem; min-height: 60px; }
     }
 
-    @media (max-width: 420px) {
-      .title-wrap h1 {
-        font-size: 1.8rem;
-      }
-
-      .title-wrap p,
-      .hint,
-      .footer-note {
-        font-size: 0.9rem;
-      }
-
-      .card h2 {
-        font-size: 1.2rem;
-      }
-
-      .remaining-chip {
-        font-size: 0.88rem;
-        padding: 8px 12px;
-      }
-
-      .status {
-        font-size: 0.98rem;
-      }
-
-      .key {
-        font-size: 2rem;
-      }
-
-      .dot {
-        font-size: 1.25rem;
-      }
+    @media (max-width: 430px) {
+      .modes { grid-template-columns: 1fr 1fr; }
+      .logo { width: 56px; height: 56px; font-size: 1.7rem; }
+      .chip { width: 100%; text-align: center; }
+      .pick-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <div class="app" id="app">
-    <div class="header">
-      <div class="title-wrap">
-        <h1>Juego de Números</h1>
-        <p>Escuchá los números y tocá el teclado en el mismo orden. Si ya acertaste algunos, el audio repite solo los que faltan.</p>
+  <div class="app">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">🔢</div>
+        <div>
+          <h1>Números</h1>
+          <div class="tiny-help">ver → tocar → unir → escuchar</div>
+        </div>
       </div>
 
-      <div class="stats">
-        <div class="stat" id="roundStat">
-          <div class="stat-label">Ronda</div>
-          <div class="stat-value" id="roundValue">1</div>
-        </div>
-        <div class="stat" id="hitsStat">
-          <div class="stat-label">Aciertos</div>
-          <div class="stat-value" id="hitsValue">0</div>
-        </div>
-        <div class="stat" id="errorsStat">
-          <div class="stat-label">Errores</div>
-          <div class="stat-value" id="errorsValue">0</div>
-        </div>
+      <div class="chips">
+        <div class="chip good" id="scoreChip">⭐ 0</div>
+        <div class="chip" id="modeChip">👀 Ver</div>
+        <div class="chip soft" id="focusChip">💡 0 1 2</div>
       </div>
+    </div>
+
+    <div class="modes">
+      <button class="mode-btn active" data-mode="learn">
+        <div class="mode-icon">👀</div>
+        <div class="mode-label">Ver</div>
+      </button>
+      <button class="mode-btn" data-mode="recognize">
+        <div class="mode-icon">🎯</div>
+        <div class="mode-label">Tocar</div>
+      </button>
+      <button class="mode-btn" data-mode="match">
+        <div class="mode-icon">🧩</div>
+        <div class="mode-label">Unir</div>
+      </button>
+      <button class="mode-btn" data-mode="audio">
+        <div class="mode-icon">🔊</div>
+        <div class="mode-label">Escuchar</div>
+      </button>
     </div>
 
     <div class="main">
-      <section class="card" id="audioCard">
-        <h2>Modo audio</h2>
-        <p class="hint">
-          No se muestran los números por adelantado. Solo se revelan arriba cuando el jugador los acierta.
-        </p>
-
-        <div class="audio-panel">
-          <div class="top-info">
-            <div class="remaining-chip" id="remainingChip">Quedan 4 números</div>
-          </div>
-
-          <div class="progress" id="progress"></div>
-          <div class="status info" id="status">Tocá “Escuchar números” para comenzar.</div>
-
-          <div class="actions">
-            <button class="secondary" id="listenBtn">🔊 Escuchar números</button>
-            <button class="primary-soft" id="newGameBtn">Nueva partida</button>
-          </div>
-        </div>
-      </section>
-
-      <section class="card">
-        <h2>Teclado numérico</h2>
-        <p class="hint">
-          La primera ronda empieza ordenada. Después de completar los 4 números, el teclado se mezcla automáticamente.
-        </p>
-        <div class="keyboard" id="keyboard"></div>
-      </section>
+      <section class="panel" id="leftPanel"></section>
+      <section class="panel" id="rightPanel"></section>
     </div>
 
-    <div class="footer-note">
-      El <strong>0</strong> sigue incluido para que puedan aparecer secuencias como <strong>0451</strong>.<br>
-      Esta versión suma: audio con números pendientes, mejor adaptación a celular, más colores en el teclado y sonidos extra para mantener la atención.
+    <div class="adult-note">
+      Casi todo habla solo. El error muestra la respuesta correcta. El teclado queda fijo para que el número se reconozca mejor.
     </div>
   </div>
 
   <script>
+    const DATA = [
+      { digit: 0, word: 'cero', object: 'pelotas', emoji: '⚽', context: 'No hay pelotas', empty: true },
+      { digit: 1, word: 'uno', object: 'sol', emoji: '☀️', context: 'Un sol' },
+      { digit: 2, word: 'dos', object: 'ojos', emoji: '👀', context: 'Dos ojos' },
+      { digit: 3, word: 'tres', object: 'pelotas', emoji: '⚽', context: 'Tres pelotas' },
+      { digit: 4, word: 'cuatro', object: 'autos', emoji: '🚗', context: 'Cuatro autos' },
+      { digit: 5, word: 'cinco', object: 'estrellas', emoji: '⭐', context: 'Cinco estrellas' },
+      { digit: 6, word: 'seis', object: 'manzanas', emoji: '🍎', context: 'Seis manzanas' },
+      { digit: 7, word: 'siete', object: 'flores', emoji: '🌼', context: 'Siete flores' },
+      { digit: 8, word: 'ocho', object: 'globos', emoji: '🎈', context: 'Ocho globos' },
+      { digit: 9, word: 'nueve', object: 'caramelos', emoji: '🍬', context: 'Nueve caramelos' }
+    ];
+
+    const orderedKeyboard = [7, 8, 9, 4, 5, 6, 1, 2, 3, null, 0, null];
+    const STORAGE_KEY = 'numeros_visual_auditivo_v1';
+
     const state = {
-      round: 1,
-      hits: 0,
-      errors: 0,
-      sequence: [],
-      currentIndex: 0,
-      orderedKeyboard: [7, 8, 9, 4, 5, 6, 1, 2, 3, null, 0, null],
-      keyboardLayout: [],
-      audioEnabled: 'speechSynthesis' in window,
-      userHasInteracted: false,
-      roundLocked: false,
-      audioContext: null,
-      lastFeedbackTimeouts: []
+      mode: 'learn',
+      points: 0,
+      currentDigit: 1,
+      recognizeTarget: 1,
+      matchTarget: 1,
+      matchOptions: [],
+      audioSequence: [1],
+      audioIndex: 0,
+      audioRound: 1,
+      progress: loadProgress(),
+      audioContext: null
     };
 
-    const appEl = document.getElementById('app');
-    const audioCardEl = document.getElementById('audioCard');
-    const progressEl = document.getElementById('progress');
-    const keyboardEl = document.getElementById('keyboard');
-    const statusEl = document.getElementById('status');
-    const remainingChipEl = document.getElementById('remainingChip');
-    const roundValueEl = document.getElementById('roundValue');
-    const hitsValueEl = document.getElementById('hitsValue');
-    const errorsValueEl = document.getElementById('errorsValue');
-    const roundStatEl = document.getElementById('roundStat');
-    const hitsStatEl = document.getElementById('hitsStat');
-    const errorsStatEl = document.getElementById('errorsStat');
-    const newGameBtn = document.getElementById('newGameBtn');
-    const listenBtn = document.getElementById('listenBtn');
+    const leftPanel = document.getElementById('leftPanel');
+    const rightPanel = document.getElementById('rightPanel');
+    const scoreChip = document.getElementById('scoreChip');
+    const modeChip = document.getElementById('modeChip');
+    const focusChip = document.getElementById('focusChip');
+    const modeButtons = [...document.querySelectorAll('.mode-btn')];
 
-    function randomDigit() {
-      return Math.floor(Math.random() * 10);
-    }
-
-    function generateSequence() {
-      return Array.from({ length: 4 }, () => randomDigit());
-    }
-
-    function shuffleDigits() {
-      const digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-      for (let i = digits.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [digits[i], digits[j]] = [digits[j], digits[i]];
+    function loadProgress() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) return JSON.parse(raw);
+      } catch (_) {}
+      const base = {};
+      for (let i = 0; i <= 9; i++) {
+        base[i] = { ok: 0, bad: 0, seen: 0 };
       }
-
-      return [...digits.slice(0, 9), null, digits[9], null];
+      return base;
     }
 
-    function remainingCount() {
-      return Math.max(0, state.sequence.length - state.currentIndex);
+    function saveProgress() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.progress));
     }
 
-    function updateRemainingChip() {
-      const count = remainingCount();
-      remainingChipEl.textContent = count === 1 ? 'Queda 1 número' : `Quedan ${count} números`;
+    function getInfo(digit) {
+      return DATA.find(item => item.digit === digit);
     }
 
-    function updateStats() {
-      roundValueEl.textContent = state.round;
-      hitsValueEl.textContent = state.hits;
-      errorsValueEl.textContent = state.errors;
-      updateRemainingChip();
+    function repeatEmoji(emoji, count) {
+      return Array.from({ length: count }, () => emoji);
     }
 
-    function renderProgress(revealIndex = null, wrongFlashIndex = null) {
-      progressEl.innerHTML = '';
-      state.sequence.forEach((digit, index) => {
-        const box = document.createElement('div');
-        box.className = 'dot';
+    function weakestDigits(limit = 3) {
+      return [...DATA]
+        .map(item => {
+          const p = state.progress[item.digit] || { ok: 0, bad: 0, seen: 0 };
+          const total = p.ok + p.bad;
+          const score = total === 0 ? -1 : p.ok / total;
+          return { digit: item.digit, score, seen: p.seen };
+        })
+        .sort((a, b) => {
+          if (a.score === b.score) return a.seen - b.seen;
+          return a.score - b.score;
+        })
+        .slice(0, limit)
+        .map(item => item.digit);
+    }
 
-        if (index < state.currentIndex) {
-          box.textContent = digit;
-          box.classList.add('done');
-        } else {
-          box.textContent = '?';
-        }
-
-        if (index === state.currentIndex) {
-          box.classList.add('current');
-        }
-
-        if (index === revealIndex) {
-          box.classList.add('reveal');
-        }
-
-        if (index === wrongFlashIndex) {
-          box.classList.add('wrong-flash');
-        }
-
-        progressEl.appendChild(box);
+    function weightedRandomDigit() {
+      const weak = weakestDigits(4);
+      const bag = [];
+      DATA.forEach(item => {
+        const p = state.progress[item.digit];
+        const total = p.ok + p.bad;
+        let weight = 1;
+        if (weak.includes(item.digit)) weight += 4;
+        if (total === 0) weight += 2;
+        if (p.bad > p.ok) weight += 2;
+        for (let i = 0; i < weight; i++) bag.push(item.digit);
       });
+      return bag[Math.floor(Math.random() * bag.length)];
     }
 
-    function renderKeyboard() {
-      keyboardEl.innerHTML = '';
-      state.keyboardLayout.forEach((item) => {
-        if (item === null) {
-          const blank = document.createElement('div');
-          blank.className = 'blank';
-          keyboardEl.appendChild(blank);
-          return;
-        }
-
-        const btn = document.createElement('button');
-        btn.className = `key tone-${item}`;
-        btn.textContent = item;
-        btn.setAttribute('aria-label', `Número ${item}`);
-        btn.addEventListener('click', () => handleKeyPress(item, btn));
-        keyboardEl.appendChild(btn);
-      });
+    function setMode(mode) {
+      state.mode = mode;
+      modeButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.mode === mode));
+      if (mode === 'learn') state.currentDigit = weightedRandomDigit();
+      if (mode === 'recognize') state.recognizeTarget = weightedRandomDigit();
+      if (mode === 'match') buildMatchRound();
+      if (mode === 'audio') buildAudioRound();
+      render();
     }
 
-    function setStatus(message, type = 'info', celebrate = false) {
-      statusEl.className = `status ${type}${celebrate ? ' celebrate' : ''}`;
-      statusEl.textContent = message;
+    function updateTopChips() {
+      scoreChip.textContent = `⭐ ${state.points}`;
+      const names = {
+        learn: '👀 Ver',
+        recognize: '🎯 Tocar',
+        match: '🧩 Unir',
+        audio: '🔊 Escuchar'
+      };
+      modeChip.textContent = names[state.mode];
+      focusChip.textContent = `💡 ${weakestDigits(3).join(' ')}`;
     }
 
-    function clearFeedbackTimers() {
-      state.lastFeedbackTimeouts.forEach((id) => clearTimeout(id));
-      state.lastFeedbackTimeouts = [];
+    function recordSeen(digit) {
+      state.progress[digit].seen += 1;
+      saveProgress();
+      updateTopChips();
     }
 
-    function vibrate(pattern) {
-      if (navigator.vibrate) {
-        navigator.vibrate(pattern);
-      }
+    function recordOk(digit) {
+      state.points += 1;
+      state.progress[digit].ok += 1;
+      state.progress[digit].seen += 1;
+      saveProgress();
+      updateTopChips();
     }
 
-    function flashUI(type) {
-      clearFeedbackTimers();
-
-      appEl.classList.remove('success-pulse', 'error-pulse');
-      document.body.classList.remove('success-flash', 'error-flash');
-      audioCardEl.style.borderColor = '#eef1ff';
-
-      if (type === 'success') {
-        appEl.classList.add('success-pulse');
-        document.body.classList.add('success-flash');
-        audioCardEl.style.borderColor = '#c8f1db';
-        hitsStatEl.classList.add('good');
-        const t1 = setTimeout(() => appEl.classList.remove('success-pulse'), 340);
-        const t2 = setTimeout(() => document.body.classList.remove('success-flash'), 340);
-        const t3 = setTimeout(() => hitsStatEl.classList.remove('good'), 460);
-        state.lastFeedbackTimeouts.push(t1, t2, t3);
-        return;
-      }
-
-      if (type === 'error') {
-        appEl.classList.add('error-pulse');
-        document.body.classList.add('error-flash');
-        audioCardEl.style.borderColor = '#ffc8d0';
-        errorsStatEl.classList.add('bad');
-        const t1 = setTimeout(() => appEl.classList.remove('error-pulse'), 340);
-        const t2 = setTimeout(() => document.body.classList.remove('error-flash'), 340);
-        const t3 = setTimeout(() => errorsStatEl.classList.remove('bad'), 460);
-        state.lastFeedbackTimeouts.push(t1, t2, t3);
-      }
+    function recordBad(digit) {
+      state.progress[digit].bad += 1;
+      state.progress[digit].seen += 1;
+      saveProgress();
+      updateTopChips();
     }
 
-    function flashRoundStat() {
-      roundStatEl.classList.add('flash-round');
-      setTimeout(() => roundStatEl.classList.remove('flash-round'), 520);
-    }
-
-    function ensureVoicesLoaded() {
-      if (!state.audioEnabled) return [];
-      return speechSynthesis.getVoices();
-    }
-
-    function getPreferredVoice() {
-      const voices = ensureVoicesLoaded();
-      return (
-        voices.find((v) => v.lang && v.lang.toLowerCase().startsWith('es-ar')) ||
-        voices.find((v) => v.lang && v.lang.toLowerCase().startsWith('es')) ||
-        null
-      );
+    function speak(text, rate = 0.88) {
+      if (!('speechSynthesis' in window)) return;
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'es-AR';
+      utterance.rate = rate;
+      utterance.pitch = 1.02;
+      utterance.volume = 1;
+      speechSynthesis.cancel();
+      speechSynthesis.speak(utterance);
     }
 
     function getAudioContext() {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       if (!AudioCtx) return null;
       if (!state.audioContext) state.audioContext = new AudioCtx();
-      if (state.audioContext.state === 'suspended') {
-        state.audioContext.resume().catch(() => {});
-      }
+      if (state.audioContext.state === 'suspended') state.audioContext.resume().catch(() => {});
       return state.audioContext;
     }
 
-    function playTone({ frequency = 440, duration = 0.14, type = 'sine', volume = 0.04, startDelay = 0 }) {
+    function playTone({ frequency = 440, duration = 0.12, type = 'sine', volume = 0.03, startDelay = 0 }) {
       const ctx = getAudioContext();
       if (!ctx) return;
-
       const now = ctx.currentTime + startDelay;
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-
       osc.type = type;
       osc.frequency.setValueAtTime(frequency, now);
-
       gain.gain.setValueAtTime(0.0001, now);
       gain.gain.exponentialRampToValueAtTime(volume, now + 0.01);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-
       osc.connect(gain);
       gain.connect(ctx.destination);
-
       osc.start(now);
       osc.stop(now + duration + 0.02);
     }
 
-    function playSuccessSound() {
-      playTone({ frequency: 523.25, duration: 0.08, type: 'sine', volume: 0.035 });
-      playTone({ frequency: 659.25, duration: 0.11, type: 'sine', volume: 0.03, startDelay: 0.05 });
-      playTone({ frequency: 783.99, duration: 0.08, type: 'triangle', volume: 0.02, startDelay: 0.12 });
+    function successSound() {
+      playTone({ frequency: 523.25, duration: 0.07, volume: 0.03 });
+      playTone({ frequency: 659.25, duration: 0.09, volume: 0.03, startDelay: 0.05 });
+      playTone({ frequency: 783.99, duration: 0.09, type: 'triangle', volume: 0.02, startDelay: 0.12 });
     }
 
-    function playErrorSound() {
-      playTone({ frequency: 230, duration: 0.14, type: 'sawtooth', volume: 0.03 });
-      playTone({ frequency: 180, duration: 0.15, type: 'triangle', volume: 0.026, startDelay: 0.05 });
-      playTone({ frequency: 145, duration: 0.12, type: 'square', volume: 0.018, startDelay: 0.11 });
+    function errorSound() {
+      playTone({ frequency: 220, duration: 0.12, type: 'square', volume: 0.022 });
+      playTone({ frequency: 170, duration: 0.14, type: 'triangle', volume: 0.02, startDelay: 0.06 });
     }
 
-    function playRoundCompleteSound() {
-      playTone({ frequency: 523.25, duration: 0.09, type: 'sine', volume: 0.03 });
-      playTone({ frequency: 659.25, duration: 0.09, type: 'sine', volume: 0.03, startDelay: 0.07 });
-      playTone({ frequency: 783.99, duration: 0.11, type: 'sine', volume: 0.03, startDelay: 0.14 });
-      playTone({ frequency: 1046.5, duration: 0.16, type: 'triangle', volume: 0.026, startDelay: 0.24 });
-    }
-
-    function playListenSound() {
-      playTone({ frequency: 587.33, duration: 0.07, type: 'sine', volume: 0.02 });
-      playTone({ frequency: 783.99, duration: 0.09, type: 'sine', volume: 0.018, startDelay: 0.05 });
-    }
-
-    function playNewRoundSound() {
-      playTone({ frequency: 392, duration: 0.07, type: 'triangle', volume: 0.02 });
-      playTone({ frequency: 523.25, duration: 0.08, type: 'triangle', volume: 0.02, startDelay: 0.07 });
-    }
-
-    function getRemainingSequence() {
-      return state.sequence.slice(state.currentIndex);
-    }
-
-    function speakSequence() {
-      state.userHasInteracted = true;
-      getAudioContext();
-      playListenSound();
-
-      const remaining = getRemainingSequence();
-
-      if (!remaining.length) {
-        setStatus('Ya completaste esta ronda. Esperá la siguiente.', 'success');
-        return;
+    function sceneHTML(digit) {
+      const info = getInfo(digit);
+      if (digit === 0) {
+        return `
+          <div class="empty-box">0 ${info.object}<br>vacío</div>
+        `;
       }
+      return repeatEmoji(info.emoji, digit)
+        .map(emoji => `<div class="sticker">${emoji}</div>`)
+        .join('');
+    }
 
-      if (!state.audioEnabled) {
-        setStatus('Este navegador no pudo activar la voz. Podemos pasarlo a audios grabados.', 'error');
-        return;
+    function smallSceneHTML(digit) {
+      const info = getInfo(digit);
+      if (digit === 0) return `<div class="pick-drawing"><span>📭</span></div>`;
+      return `<div class="pick-drawing">${repeatEmoji(info.emoji, digit).map(emoji => `<span>${emoji}</span>`).join('')}</div>`;
+    }
+
+    function shuffle(array) {
+      const copy = [...array];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
       }
+      return copy;
+    }
 
-      const voice = getPreferredVoice();
-      const utterance = new SpeechSynthesisUtterance(remaining.join(' ... '));
-      const isMobile = window.matchMedia('(max-width: 640px)').matches;
-      utterance.lang = voice?.lang || 'es-AR';
-      utterance.rate = isMobile ? 0.76 : 0.82;
-      utterance.pitch = 1.03;
-      utterance.volume = 1;
-      if (voice) utterance.voice = voice;
-
-      speechSynthesis.cancel();
-      speechSynthesis.speak(utterance);
-
-      if (state.currentIndex === 0) {
-        setStatus('Escuchá la secuencia y después tocá los números en ese orden.', 'info');
-      } else {
-        const count = remaining.length;
-        setStatus(count === 1
-          ? 'Se repitió solo el número que faltaba.'
-          : `Se repitieron solo los ${count} números que faltan.`, 'info');
+    function buildMatchRound() {
+      const target = weightedRandomDigit();
+      state.matchTarget = target;
+      const options = new Set([target]);
+      while (options.size < 3) {
+        options.add(Math.floor(Math.random() * 10));
       }
+      state.matchOptions = shuffle([...options]);
+      recordSeen(target);
     }
 
-    function nextRound() {
-      state.round += 1;
-      state.sequence = generateSequence();
-      state.currentIndex = 0;
-      state.keyboardLayout = shuffleDigits();
-      state.roundLocked = false;
-      updateStats();
-      renderProgress();
-      renderKeyboard();
-      playNewRoundSound();
-      flashRoundStat();
-      setStatus('Nueva ronda. Tocá “Escuchar números”.', 'success', true);
+    function getAudioLength() {
+      if (state.audioRound <= 2) return 1;
+      if (state.audioRound <= 5) return 2;
+      return 3;
     }
 
-    function resetKeyClasses(button) {
-      button.classList.remove('correct', 'wrong');
-      void button.offsetWidth;
-    }
-
-    function handleKeyPress(value, button) {
-      if (state.roundLocked) return;
-
-      state.userHasInteracted = true;
-      getAudioContext();
-
-      const expected = state.sequence[state.currentIndex];
-
-      if (value === expected) {
-        resetKeyClasses(button);
-        button.classList.add('correct');
-        state.hits += 1;
-        state.currentIndex += 1;
-        updateStats();
-        renderProgress(state.currentIndex - 1);
-        playSuccessSound();
-        flashUI('success');
-        vibrate(18);
-
-        if (state.currentIndex >= state.sequence.length) {
-          state.roundLocked = true;
-          playRoundCompleteSound();
-          setStatus('¡Muy bien! Completaste la ronda.', 'success', true);
-          setTimeout(nextRound, 1050);
-        } else {
-          const remaining = remainingCount();
-          setStatus(
-            remaining === 1
-              ? `¡Correcto! Se reveló el ${value}. Queda 1 número.`
-              : `¡Correcto! Se reveló el ${value}. Quedan ${remaining} números.`,
-            'success'
-          );
-        }
-
-        setTimeout(() => button.classList.remove('correct'), 340);
-      } else {
-        resetKeyClasses(button);
-        button.classList.add('wrong');
-        state.errors += 1;
-        updateStats();
-        renderProgress(null, state.currentIndex);
-        playErrorSound();
-        flashUI('error');
-        vibrate([30, 25, 30]);
-        setStatus('No era ese número. Probá de nuevo o repetí el audio.', 'error');
-        setTimeout(() => button.classList.remove('wrong'), 340);
+    function buildAudioRound() {
+      const weak = weakestDigits(5);
+      const length = getAudioLength();
+      const seq = [];
+      for (let i = 0; i < length; i++) {
+        const useWeak = Math.random() < 0.65;
+        seq.push(useWeak ? weak[Math.floor(Math.random() * weak.length)] : Math.floor(Math.random() * 10));
       }
+      state.audioSequence = seq;
+      state.audioIndex = 0;
+      seq.forEach(d => recordSeen(d));
     }
 
-    function startGame() {
-      if (state.audioEnabled) {
-        speechSynthesis.cancel();
-      }
+    function renderLearn() {
+      const info = getInfo(state.currentDigit);
+      leftPanel.innerHTML = `
+        <div class="hero">
+          <div class="hero-top">
+            <div class="hero-badge">👀 mirar y escuchar</div>
+            <button class="icon-btn" id="speakLearnBtn" aria-label="Escuchar">🔊</button>
+          </div>
 
-      clearFeedbackTimers();
-      appEl.classList.remove('success-pulse', 'error-pulse');
-      document.body.classList.remove('success-flash', 'error-flash');
-      audioCardEl.style.borderColor = '#eef1ff';
-      hitsStatEl.classList.remove('good');
-      errorsStatEl.classList.remove('bad');
-      roundStatEl.classList.remove('good', 'bad', 'flash-round');
+          <div class="big-stage">
+            <div class="big-digit">${info.digit}</div>
+            <div class="big-word">${info.word}</div>
+            <div class="mini-row">
+              <div class="mini-pill">${info.context}</div>
+            </div>
+          </div>
 
-      state.round = 1;
-      state.hits = 0;
-      state.errors = 0;
-      state.sequence = generateSequence();
-      state.currentIndex = 0;
-      state.keyboardLayout = [...state.orderedKeyboard];
-      state.roundLocked = false;
+          <div class="status" id="learnStatus">🔊 ${info.word}</div>
 
-      updateStats();
-      renderProgress();
-      renderKeyboard();
-      playNewRoundSound();
-      setStatus('Primera ronda lista. Tocá “Escuchar números”.', 'info');
+          <div class="actions">
+            <button class="action-btn primary" id="nextLearnBtn">✨ otro</button>
+            <button class="action-btn soft" id="goRecognizeBtn">🎯 tocar</button>
+          </div>
+        </div>
+      `;
+
+      rightPanel.innerHTML = `
+        <div class="scene">
+          <div class="scene-title">
+            <span>🖼️ dibujo</span>
+            <span>${info.digit} ${info.object}</span>
+          </div>
+          <div class="scene-drawing">
+            ${sceneHTML(info.digit)}
+          </div>
+        </div>
+      `;
+
+      document.getElementById('speakLearnBtn').addEventListener('click', () => {
+        speak(`Este es el ${info.word}. ${info.context}.`, 0.84);
+      });
+      document.getElementById('nextLearnBtn').addEventListener('click', () => {
+        state.currentDigit = weightedRandomDigit();
+        render();
+      });
+      document.getElementById('goRecognizeBtn').addEventListener('click', () => setMode('recognize'));
+
+      setTimeout(() => speak(`Este es el ${info.word}. ${info.context}.`, 0.84), 160);
     }
 
-    if ('speechSynthesis' in window) {
-      ensureVoicesLoaded();
-      speechSynthesis.onvoiceschanged = () => ensureVoicesLoaded();
+    function keyboardHTML() {
+      return orderedKeyboard.map(item => {
+        if (item === null) return `<div class="ghost"></div>`;
+        return `<button class="num-btn tone-${item}" data-digit="${item}">${item}</button>`;
+      }).join('');
     }
 
-    listenBtn.addEventListener('click', speakSequence);
-    newGameBtn.addEventListener('click', startGame);
+    function renderRecognize(status = `🎯 tocá el ${getInfo(state.recognizeTarget).word}`, statusClass = '') {
+      const info = getInfo(state.recognizeTarget);
+      leftPanel.innerHTML = `
+        <div class="hero">
+          <div class="target-box">
+            <div class="target-top">
+              <div class="target-label">🎯 tocar</div>
+              <button class="icon-btn" id="repeatRecognizeBtn" aria-label="Repetir">🔊</button>
+            </div>
+            <div class="big-digit">${info.digit}</div>
+            <div class="big-word">${info.word}</div>
+            <div class="mini-row"><div class="mini-pill">${info.context}</div></div>
+          </div>
+          <div class="status ${statusClass}" id="recognizeStatus">${status}</div>
+          <div class="actions">
+            <button class="action-btn light" id="newRecognizeBtn">🔁 otro</button>
+            <button class="action-btn soft" id="goMatchBtn">🧩 unir</button>
+          </div>
+        </div>
+      `;
 
-    startGame();
+      rightPanel.innerHTML = `
+        <div class="scene">
+          <div class="scene-title">
+            <span>⌨️ teclado fijo</span>
+            <span>${info.word}</span>
+          </div>
+          <div class="keyboard" id="recognizeKeyboard">${keyboardHTML()}</div>
+        </div>
+      `;
+
+      document.getElementById('repeatRecognizeBtn').addEventListener('click', () => {
+        speak(`Tocá el ${info.word}.`, 0.85);
+      });
+      document.getElementById('newRecognizeBtn').addEventListener('click', () => {
+        state.recognizeTarget = weightedRandomDigit();
+        recordSeen(state.recognizeTarget);
+        render();
+      });
+      document.getElementById('goMatchBtn').addEventListener('click', () => setMode('match'));
+
+      document.querySelectorAll('#recognizeKeyboard .num-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const digit = Number(btn.dataset.digit);
+          if (digit === state.recognizeTarget) {
+            btn.classList.add('ok');
+            recordOk(digit);
+            successSound();
+            document.getElementById('recognizeStatus').className = 'status ok';
+            document.getElementById('recognizeStatus').textContent = `✅ ${getInfo(digit).word}`;
+            speak(`Muy bien. ${getInfo(digit).word}.`, 0.86);
+            setTimeout(() => {
+              state.recognizeTarget = weightedRandomDigit();
+              recordSeen(state.recognizeTarget);
+              render();
+            }, 900);
+          } else {
+            btn.classList.add('bad');
+            recordBad(state.recognizeTarget);
+            errorSound();
+            const correct = document.querySelector(`#recognizeKeyboard .num-btn[data-digit="${state.recognizeTarget}"]`);
+            if (correct) correct.classList.add('reveal');
+            document.getElementById('recognizeStatus').className = 'status bad';
+            document.getElementById('recognizeStatus').textContent = `👉 este es el ${getInfo(state.recognizeTarget).word}`;
+            speak(`Este es el ${getInfo(state.recognizeTarget).word}.`, 0.82);
+            setTimeout(() => renderRecognize(`🎯 tocá el ${getInfo(state.recognizeTarget).word}`), 1150);
+          }
+        });
+      });
+
+      setTimeout(() => speak(`Tocá el ${info.word}.`, 0.85), 130);
+    }
+
+    function renderMatch(status = `🧩 ¿dónde hay ${getInfo(state.matchTarget).word}?`, statusClass = '') {
+      const info = getInfo(state.matchTarget);
+      leftPanel.innerHTML = `
+        <div class="hero">
+          <div class="target-box">
+            <div class="target-top">
+              <div class="target-label">🧩 unir</div>
+              <button class="icon-btn" id="repeatMatchBtn" aria-label="Repetir">🔊</button>
+            </div>
+            <div class="big-digit">${info.digit}</div>
+            <div class="big-word">${info.word}</div>
+            <div class="mini-row"><div class="mini-pill">${info.context}</div></div>
+          </div>
+          <div class="status ${statusClass}" id="matchStatus">${status}</div>
+          <div class="actions">
+            <button class="action-btn light" id="newMatchBtn">🔁 otro</button>
+            <button class="action-btn soft" id="goAudioBtn">🔊 escuchar</button>
+          </div>
+        </div>
+      `;
+
+      rightPanel.innerHTML = `
+        <div class="scene">
+          <div class="scene-title">
+            <span>🖼️ elegí el dibujo</span>
+            <span>${info.word}</span>
+          </div>
+          <div class="pick-grid" id="pickGrid">
+            ${state.matchOptions.map(option => `
+              <button class="pick-card" data-option="${option}">
+                ${smallSceneHTML(option)}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      document.getElementById('repeatMatchBtn').addEventListener('click', () => {
+        speak(`Buscá ${info.word}.`, 0.85);
+      });
+      document.getElementById('newMatchBtn').addEventListener('click', () => {
+        buildMatchRound();
+        render();
+      });
+      document.getElementById('goAudioBtn').addEventListener('click', () => setMode('audio'));
+
+      document.querySelectorAll('#pickGrid .pick-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const selected = Number(card.dataset.option);
+          if (selected === state.matchTarget) {
+            card.classList.add('ok');
+            recordOk(selected);
+            successSound();
+            document.getElementById('matchStatus').className = 'status ok';
+            document.getElementById('matchStatus').textContent = `✅ ${info.word}`;
+            speak(`Muy bien. ${info.word}.`, 0.86);
+            setTimeout(() => {
+              buildMatchRound();
+              render();
+            }, 900);
+          } else {
+            card.classList.add('bad');
+            recordBad(state.matchTarget);
+            errorSound();
+            const correct = document.querySelector(`#pickGrid .pick-card[data-option="${state.matchTarget}"]`);
+            if (correct) correct.classList.add('reveal');
+            document.getElementById('matchStatus').className = 'status bad';
+            document.getElementById('matchStatus').textContent = `👉 acá está ${info.word}`;
+            speak(`Acá está ${info.word}.`, 0.82);
+            setTimeout(() => renderMatch(`🧩 ¿dónde hay ${info.word}?`), 1150);
+          }
+        });
+      });
+
+      setTimeout(() => speak(`Buscá ${info.word}.`, 0.85), 140);
+    }
+
+    function renderAudio(status = '🔊 escuchá y tocá', statusClass = '') {
+      leftPanel.innerHTML = `
+        <div class="hero">
+          <div class="hero-top">
+            <div class="hero-badge">🔊 escuchar</div>
+            <button class="icon-btn" id="repeatAudioBtn" aria-label="Escuchar">🔊</button>
+          </div>
+
+          <div class="scene">
+            <div class="scene-title">
+              <span>⭐ ronda ${state.audioRound}</span>
+              <span>${state.audioSequence.length} número${state.audioSequence.length > 1 ? 's' : ''}</span>
+            </div>
+            <div class="progress" id="audioProgress">
+              ${state.audioSequence.map((digit, index) => {
+                let cls = 'bubble hide-digit';
+                let content = '●';
+                if (index < state.audioIndex) {
+                  cls = 'bubble done';
+                  content = digit;
+                } else if (index === state.audioIndex) {
+                  cls = 'bubble current hide-digit';
+                }
+                return `<div class="${cls}">${content}</div>`;
+              }).join('')}
+            </div>
+          </div>
+
+          <div class="status ${statusClass}" id="audioStatus">${status}</div>
+
+          <div class="actions">
+            <button class="action-btn primary" id="listenSequenceBtn">🔊 escuchar</button>
+            <button class="action-btn light" id="resetAudioBtn">🔁 nueva</button>
+          </div>
+        </div>
+      `;
+
+      rightPanel.innerHTML = `
+        <div class="scene">
+          <div class="scene-title">
+            <span>⌨️ tocar en orden</span>
+            <span>despacio</span>
+          </div>
+          <div class="keyboard" id="audioKeyboard">${keyboardHTML()}</div>
+        </div>
+      `;
+
+      document.getElementById('repeatAudioBtn').addEventListener('click', speakAudioSequence);
+      document.getElementById('listenSequenceBtn').addEventListener('click', speakAudioSequence);
+      document.getElementById('resetAudioBtn').addEventListener('click', () => {
+        buildAudioRound();
+        render();
+      });
+
+      document.querySelectorAll('#audioKeyboard .num-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const digit = Number(btn.dataset.digit);
+          const expected = state.audioSequence[state.audioIndex];
+          if (digit === expected) {
+            btn.classList.add('ok');
+            recordOk(digit);
+            successSound();
+            state.audioIndex += 1;
+            if (state.audioIndex >= state.audioSequence.length) {
+              document.getElementById('audioStatus').className = 'status ok';
+              document.getElementById('audioStatus').textContent = '✅ muy bien';
+              speak('Muy bien.', 0.86);
+              state.audioRound += 1;
+              setTimeout(() => {
+                buildAudioRound();
+                render();
+              }, 950);
+            } else {
+              renderAudio('✅ seguí', 'ok');
+            }
+          } else {
+            btn.classList.add('bad');
+            recordBad(expected);
+            errorSound();
+            document.getElementById('audioStatus').className = 'status bad';
+            document.getElementById('audioStatus').textContent = '👉 escuchá otra vez';
+            speak(`Escuchá otra vez.`, 0.84);
+            setTimeout(speakAudioSequence, 500);
+            setTimeout(() => renderAudio('🔊 escuchá y tocá'), 1100);
+          }
+        });
+      });
+
+      setTimeout(speakAudioSequence, 180);
+    }
+
+    function speakAudioSequence() {
+      const remaining = state.audioSequence.slice(state.audioIndex);
+      if (!remaining.length) return;
+      speak(remaining.join(' ... '), 0.74);
+    }
+
+    function render() {
+      updateTopChips();
+      if (state.mode === 'learn') return renderLearn();
+      if (state.mode === 'recognize') return renderRecognize();
+      if (state.mode === 'match') return renderMatch();
+      if (state.mode === 'audio') return renderAudio();
+    }
+
+    modeButtons.forEach(btn => {
+      btn.addEventListener('click', () => setMode(btn.dataset.mode));
+    });
+
+    recordSeen(state.currentDigit);
+    render();
   </script>
 </body>
 </html>
